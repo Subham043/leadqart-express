@@ -1,0 +1,3 @@
+//facebook - login - uri = https://www.facebook.com/v9.0/dialog/oauth?client_id=455099129250811&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://subham5ine.pythonanywhere.com/
+
+//recieve code after login in facebook successfully: https://subham5ine.pythonanywhere.com/?code=AQAdbPA81jRzRsVs9n2XP7kUb3eCdmh0WfmMiJpYN5aJrviYAY1WLfWKb3kkLtfYvRYE_MWLJxdNqfhCABcwSExl9RlGTUUJSsQp_K6isAiB3qPl27IjtFrO8plgKS2jntXIxt2MZT3W0LQ1UvzIRqMzJQ1-faUeVXsZEUU2J8Vu_xYgvB0-qRp5SySB7tAUVsKZMQqYayIoqEZSqF4dOBt_v7KxZY6OAeAggwJ_XwPWpQBSm1CYKS3vQifDVmZR-9mWmaM5kRUvPJN4mi7JQ7tPn4zQEtWt4P8r7lWBEYGQWZzD9C8X3cG8_cFh_T4wh5gltjTQygG_fYoUqKsZsr3FiaF8kqHxfp_d82KwkHS7Yt0ww2WKAAE_U6hcYUpZ54w#_=_
