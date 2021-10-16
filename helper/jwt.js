@@ -38,7 +38,7 @@ module.exports = {
             next();
         })
     },
-    verifyAccessTokenCookie: () => {
+    verifyAccessTokenCookie: (req, res, next) => {
         if(!req.cookies.accessToken){
             return res.status(200).render('connection');
         }
