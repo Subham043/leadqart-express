@@ -38,19 +38,18 @@ module.exports = {
             next();
         })
     },
-    verifyAccessTokenCookie: (cookies) => {
-        
-        return new Promise((resolve, reject)=>{
-            if(!cookies){
-                reject('Access Denied')
+    verifyAccessTokenCookie: () => {
+        if(!req.cookies.accessToken){
+            return res.status(200).render('connection');
+        }
+        const token = req.cookies.accessToken;
+        JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
+            if(err) {
+                console.log(error)
+                return res.status(400).render('connection');
             }
-            const token = cookies;
-            JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
-                if(err) {
-                    reject('Access Denied')
-                }
-                resolve(payload)
-            })
+            req.payload = payload;
+            next();
         })
     },
     signRefreshToken: (userId) => {

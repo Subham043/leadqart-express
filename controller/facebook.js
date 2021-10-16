@@ -7,29 +7,13 @@ const Facebook = db.facebook;
 
 
 //facebook login redirection
-router.get('/', async (req, res) => {
-    if(!req.cookies.accessToken){
-        const cooke = req.cookies.accessToken
-    }else{
-        return res.status(400).render('connection');
-    }
-    try{
-        let payload = await verifyAccessTokenCookie(cooke);
-        return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
-    }catch(e){
-        return res.status(400).render('connection');
-    }
+router.get('/', verifyAccessTokenCookie, async (req, res) => {
+    return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
 })
 
 //after facebook login redirection
-router.get('/connection', async (req, res) => {
-    if(!req.cookies.accessToken){
-        const cooke = req.cookies.accessToken
-    }else{
-        return res.status(400).render('connection');
-    }
+router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
     try{
-        let payload = await verifyAccessTokenCookie(cooke);
         if((req.query.code).length>0){
             const code = req.query.code;
             try {
@@ -37,15 +21,15 @@ router.get('/connection', async (req, res) => {
                 let facebook = await Facebook.findAll({
                     attributes: ['id','userId'],
                     where: {
-                        userId: payload.id,
+                        userId: req.payload.id,
                     }
                 })
                 if (facebook.length == 0) {
-                    await Facebook.create({ userId:payload.id, token:access_token })
+                    await Facebook.create({ userId:req.payload.id, token:access_token })
                 }else{
                     await Facebook.update({ token:access_token }, {
                         where: {
-                            userId: payload.id
+                            userId: req.payload.id
                         }
                     })
                 }
@@ -55,9 +39,11 @@ router.get('/connection', async (req, res) => {
                 return res.status(400).render('connection');
             }
         }else{
+            console.log(error)
             return res.status(400).render('connection');
         }
     }catch (error) {
+        console.log(error)
         return res.status(400).render('connection');
     }
     
