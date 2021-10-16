@@ -7,12 +7,17 @@ const Facebook = db.facebook;
 
 
 //facebook login redirection
-router.get('/', verifyAccessTokenCookie, async (req, res) => {
-    return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
+router.get('/', async (req, res) => {
+    try{
+        let payload = await verifyAccessTokenCookie();
+        return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
+    }catch(e){
+        return res.status(400).render('connection');
+    }
 })
 
 //after facebook login redirection
-router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
+router.get('/connection', async (req, res) => {
     try{
         let payload = await verifyAccessTokenCookie();
         if((req.query.code).length>0){
