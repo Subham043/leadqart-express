@@ -12,6 +12,10 @@ const { AuthLimiter } = require('../middleware/rate-limiter');
 const { nameValidation, phoneValidation, emailValidation, passwordValidation, cpasswordValidation, otpValidation } = require('../helper/validation');
 
 
+//test router
+router.get('/test', async (req, res) => {
+    return res.status(200).json({message:"connection successful"})
+})
 
 // registration page route.
 router.post('/register',
