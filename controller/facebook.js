@@ -32,6 +32,7 @@ router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
                     }
                 })
             }
+            return res.status(200).render('connection_success');
         } catch (error) {
             console.log(error);
             return res.status(200).render('connection');
