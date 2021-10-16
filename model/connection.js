@@ -1,7 +1,13 @@
 const {Sequelize, DataTypes}  = require("sequelize");
 
-const sequelize = new Sequelize('leadqart', 'root', '',{
-    host:'localhost',
+// const sequelize = new Sequelize('leadqart', 'root', '',{
+//     host:'localhost',
+//     dialect: 'mysql',
+//     logging: false, //sql query logging in console
+//     pool:{max:5,min:0,idle:10000}
+// })
+const sequelize = new Sequelize('db2jg6l5rf2i2r', 'pwkhgbxuhsxxok', 'fb595eb184d77bf050ba080355c39e63791c5b9999ff59a970d96f1a1a756db1',{
+    host:'ec2-3-222-235-188.compute-1.amazonaws.com',
     dialect: 'mysql',
     logging: false, //sql query logging in console
     pool:{max:5,min:0,idle:10000}
