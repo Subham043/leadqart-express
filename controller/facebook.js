@@ -8,7 +8,7 @@ const Facebook = db.facebook;
 
 //facebook login redirection
 router.get('/', verifyAccessTokenCookie, async (req, res) => {
-    return res.redirect('https://www.facebook.com/v9.0/dialog/oauth?client_id=455099129250811&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection');
+    return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
 })
 
 //after facebook login redirection
@@ -16,7 +16,7 @@ router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
     if((req.query.code).length>0){
         const code = req.query.code;
         try {
-            const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=455099129250811&redirect_uri=https://leadqart.herokuapp.com/facebook/connection&client_secret=2d447f6b8cc41bab1e4cdf86040d7cee&code=${code}`).json();
+            const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.FACEBOOKCLIENTID}&redirect_uri=https://leadqart.herokuapp.com/facebook/connection&client_secret=${process.env.FACEBOOKCLIENTSECRET}&code=${code}`).json();
             let facebook = await Facebook.findAll({
                 attributes: ['id','userId'],
                 where: {
