@@ -34,5 +34,6 @@ db.sequelize.sync({force:false})
 })
 
 db.users = require('./users')(sequelize, DataTypes);
+db.facebook = require('./facebook')(sequelize, DataTypes);
 
 module.exports = db;

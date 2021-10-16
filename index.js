@@ -2,6 +2,7 @@ require('dotenv').config()
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser')
+const ejs = require('ejs');
 const helmet = require("helmet");
 const hpp = require('hpp');
 const cors = require('cors');
@@ -34,9 +35,16 @@ app.use(limiter);
 // app.use(cors(corsOptions))
 app.use(cors())
 
+//view engine
+app.set('views', path.join(__dirname, 'view'));
+app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
+
 //controller-routes
 let authController = require('./controller');
 app.use('/', authController);
+let facebookController = require('./controller/facebook');
+app.use('/facebook', facebookController);
 
 
 app.listen(port,()=>{

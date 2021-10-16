@@ -38,6 +38,19 @@ module.exports = {
             next();
         })
     },
+    verifyAccessTokenCookie: (req, res, next) => {
+        if(!req.cookies.accessToken){
+            return res.status(200).render('connection');
+        }
+        const token = req.cookies.accessToken;
+        JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
+            if(err) {
+                return res.status(200).render('connection');
+            }
+            req.payload = payload;
+            next();
+        })
+    },
     signRefreshToken: (userId) => {
         return new Promise((resolve, reject) => {
             const payload = {
