@@ -45,7 +45,7 @@ module.exports = {
         const token = req.cookies.accessToken;
         JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
             if(err) {
-                console.log(error)
+                console.log(err)
                 return res.status(400).render('connection');
             }
             req.payload = payload;
