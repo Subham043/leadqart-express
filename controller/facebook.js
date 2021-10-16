@@ -13,36 +13,39 @@ router.get('/', verifyAccessTokenCookie, async (req, res) => {
 
 //after facebook login redirection
 router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
-    if((req.query.code).length>0){
-        const code = req.query.code;
-        try {
-            const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.FACEBOOKCLIENTID}&redirect_uri=https://leadqart.herokuapp.com/facebook/connection&client_secret=${process.env.FACEBOOKCLIENTSECRET}&code=${code}`).json();
-            let facebook = await Facebook.findAll({
-                attributes: ['id','userId'],
-                where: {
-                    userId: req.payload.id,
-                }
-            })
-            if (facebook.length == 0) {
-                await Facebook.create({ userId:req.payload.id, token:access_token })
-            }else{
-                await Facebook.update({ token:access_token }, {
+    try{
+        let payload = await verifyAccessTokenCookie();
+        if((req.query.code).length>0){
+            const code = req.query.code;
+            try {
+                const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.FACEBOOKCLIENTID}&redirect_uri=https://leadqart.herokuapp.com/facebook/connection&client_secret=${process.env.FACEBOOKCLIENTSECRET}&code=${code}`).json();
+                let facebook = await Facebook.findAll({
+                    attributes: ['id','userId'],
                     where: {
-                        userId: req.payload.id
+                        userId: payload.id,
                     }
                 })
+                if (facebook.length == 0) {
+                    await Facebook.create({ userId:payload.id, token:access_token })
+                }else{
+                    await Facebook.update({ token:access_token }, {
+                        where: {
+                            userId: payload.id
+                        }
+                    })
+                }
+                return res.status(200).render('connection_success');
+            } catch (error) {
+                console.log(error);
+                return res.status(400).render('connection');
             }
-            return res.status(200).render('connection_success');
-        } catch (error) {
-            console.log(error);
+        }else{
             return res.status(400).render('connection');
         }
-    }
-    
-    if((req.query.error).length>0){
+    }catch (error) {
         return res.status(400).render('connection');
     }
-    return res.status(400).render('connection');
+    
 })
 
 
