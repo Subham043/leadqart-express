@@ -35,13 +35,14 @@ router.get('/connection', verifyAccessTokenCookie, async (req, res) => {
             return res.status(200).render('connection_success');
         } catch (error) {
             console.log(error);
-            return res.status(200).render('connection');
+            return res.status(400).render('connection');
         }
-    }else if((req.query.error).length>0){
-        return res.status(200).render('connection');
-    }else{
-        return res.status(200).render('connection');
     }
+    
+    if((req.query.error).length>0){
+        return res.status(400).render('connection');
+    }
+    return res.status(400).render('connection');
 })
 
 
