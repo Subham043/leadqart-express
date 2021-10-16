@@ -8,8 +8,13 @@ const Facebook = db.facebook;
 
 //facebook login redirection
 router.get('/', async (req, res) => {
+    if(!req.cookies.accessToken){
+        const cooke = req.cookies.accessToken
+    }else{
+        return res.status(400).render('connection');
+    }
     try{
-        let payload = await verifyAccessTokenCookie();
+        let payload = await verifyAccessTokenCookie(cooke);
         return res.redirect(`https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.FACEBOOKCLIENTID}&scope=pages_show_list,ads_management,pages_read_engagement,leads_retrieval,pages_manage_metadata,pages_manage_ads&redirect_uri=https://leadqart.herokuapp.com/facebook/connection`);
     }catch(e){
         return res.status(400).render('connection');
@@ -18,8 +23,13 @@ router.get('/', async (req, res) => {
 
 //after facebook login redirection
 router.get('/connection', async (req, res) => {
+    if(!req.cookies.accessToken){
+        const cooke = req.cookies.accessToken
+    }else{
+        return res.status(400).render('connection');
+    }
     try{
-        let payload = await verifyAccessTokenCookie();
+        let payload = await verifyAccessTokenCookie(cooke);
         if((req.query.code).length>0){
             const code = req.query.code;
             try {

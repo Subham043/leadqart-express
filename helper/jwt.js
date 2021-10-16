@@ -38,13 +38,13 @@ module.exports = {
             next();
         })
     },
-    verifyAccessTokenCookie: () => {
+    verifyAccessTokenCookie: (cookies) => {
         
         return new Promise((resolve, reject)=>{
-            if(!req.cookies.accessToken){
+            if(!cookies){
                 reject('Access Denied')
             }
-            const token = req.cookies.accessToken;
+            const token = cookies;
             JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
                 if(err) {
                     reject('Access Denied')
