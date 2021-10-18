@@ -1,17 +1,17 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize('leadqart', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql',
-    logging: false, //sql query logging in console
-    pool: { max: 5, min: 0, idle: 10000 }
-})
-// const sequelize = new Sequelize('a5inepro_leadqart', 'a5inepro_a5ineprojects9', '%JdE89iD$Jov',{
-//     host:'209.99.16.221',
+// const sequelize = new Sequelize('leadqart', 'root', '', {
+//     host: 'localhost',
 //     dialect: 'mysql',
 //     logging: false, //sql query logging in console
-//     pool:{max:5,min:0,idle:10000}
+//     pool: { max: 5, min: 0, idle: 10000 }
 // })
+const sequelize = new Sequelize('a5inepro_leadqart', 'a5inepro_a5ineprojects9', '%JdE89iD$Jov',{
+    host:'209.99.16.221',
+    dialect: 'mysql',
+    logging: false, //sql query logging in console
+    pool:{max:5,min:0,idle:10000}
+})
 
 sequelize.authenticate()
     .then(() => {
@@ -66,16 +66,6 @@ Group.belongsToMany(Lead, {
     as: "leads",
     foreignKey: "group_id",
 });
-// LeadGroup.associate = (models) => {
-//     LeadGroup.belongsTo(models.Lead, { foreignKey: 'lead_id', targetKey: 'lead_id', as: 'Leads' });
-//     LeadGroup.belongsTo(models.Group, { foreignKey: 'group_id', targetKey: 'group_id', as: 'Groups' });
-//   }
-//   Group.associate = (models) => {
-//     Group.belongsToMany(models.Lead, { as: 'LeadsInGroup', through: models.LeadGroup, foreignKey: 'group_id'});
-//   }
-//   Lead.associate = (models) => {
-//     Lead.belongsToMany(models.Group, { as: 'GroupForLead', through: models.LeadGroup, foreignKey: 'lead_id'});
-//   }
 
 db.users = User;
 db.facebook = Facebook;
