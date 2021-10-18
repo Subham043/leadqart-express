@@ -45,6 +45,12 @@ let authController = require('./controller');
 app.use('/', authController);
 let facebookController = require('./controller/facebook');
 app.use('/facebook', facebookController);
+let leadController = require('./controller/leads');
+app.use('/leads', leadController);
+let groupController = require('./controller/groups');
+app.use('/groups', groupController);
+let leadGroupController = require('./controller/leadGroup');
+app.use('/lead-group', leadGroupController);
 
 
 app.listen(port,()=>{

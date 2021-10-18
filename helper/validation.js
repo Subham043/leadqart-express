@@ -64,4 +64,22 @@ module.exports={
             return Promise.reject('Please enter a valid otp');
         }
     },
+
+    textValidation: (value, field)=>{
+        if (isEmpty(value)) {
+            return Promise.reject(`Please enter a valid ${field}`);
+        }
+        if (!value.match(/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&+=,]+$/i)) {
+            return Promise.reject(`Please enter a valid ${field}`);
+        }
+    },
+
+    IDValidation: (value, field)=>{
+        if (isEmpty(value)) {
+            return Promise.reject(`Please enter a valid ${field}`);
+        }
+        if (!value.match(/^[0-9\s]*$/)) {
+            return Promise.reject(`Please enter a valid ${field}`);
+        }
+    },
 }
