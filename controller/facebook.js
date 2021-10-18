@@ -93,7 +93,7 @@ router.get('/ramya', async (req, res) => {
 })
 
 //after facebook login redirection
-router.get('/connection', async (req, res) => {
+router.get('/connection/ramya', async (req, res) => {
     try{
         if((req.query.code).length>0){
             const code = req.query.code;
