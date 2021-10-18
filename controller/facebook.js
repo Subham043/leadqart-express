@@ -98,7 +98,7 @@ router.get('/connection', async (req, res) => {
         if((req.query.code).length>0){
             const code = req.query.code;
             try {
-                const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.FACEBOOKCLIENTID}&redirect_uri=https://leadqart.herokuapp.com/facebook/connection&client_secret=${process.env.FACEBOOKCLIENTSECRET}&code=${code}`).json();
+                const {access_token} = await got(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.FACEBOOKCLIENTID}&redirect_uri=https://leadqart.herokuapp.com/facebook/connection/ramya&client_secret=${process.env.FACEBOOKCLIENTSECRET}&code=${code}`).json();
                 let facebook = await Facebook.findAll({
                     attributes: ['id','userId'],
                     where: {
