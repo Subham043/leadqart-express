@@ -87,6 +87,76 @@ router.post('/create',
 
     })
 
+// delete lead from the group route.
+router.delete('/delete/:leadId/:groupId',
+    verifyAccessToken,
+    //custom validations
+    check('leadId').custom(async (value) => IDValidation(value, 'lead id')),
+    check('leadId').custom(async (value, { req }) => {
+        let lead = await Leads.findAll({
+            attributes: ['id'],
+            where: {
+                id: value,
+                userId: req.payload.id,
+            }
+        })
+        if (lead.length == 0) {
+            return Promise.reject('Invalid lead');
+        }
+    }),
+    check('groupId').custom(async (value) => IDValidation(value, 'group id')),
+    check('groupId').custom(async (value, { req }) => {
+        let group = await Groups.findAll({
+            attributes: ['id'],
+            where: {
+                id: value,
+                userId: req.payload.id,
+            }
+        })
+        if (group.length == 0) {
+            return Promise.reject('Invalid group');
+        }
+    }),
+    check('leadId').custom(async (value, { req }) => {
+        let leadg = await LeadsGroups.findAll({
+            attributes: ['id'],
+            where: {
+                lead_id: value,
+                group_id: req.params.groupId,
+            }
+        })
+        if (leadg.length == 0) {
+            return Promise.reject('This lead does not belong to the given group id');
+        }
+    }),
+    
+    async function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.mapped(),
+            });
+        } else {
+
+            try {
+                await LeadsGroups.destroy({
+                    where: {
+                        lead_id: req.params.leadId,
+                        group_id: req.params.groupId,
+                    }
+                })
+                return res.status(200).json({
+                    message: 'Lead removed successfully from group',
+                });
+            } catch (error) {
+                return res.status(400).json({
+                    message: 'Oops!! Something went wrong please try again.',
+                });
+            }
+        }
+
+    })
+
 
 
 
