@@ -1,3 +1,4 @@
+const path = require('path');
 //string is Empty
 function isEmpty(str) {
     return (!str || str.length === 0);

@@ -6,6 +6,7 @@ const { verifyAccessToken } = require('../helper/jwt');
 const db = require('../model/connection');
 const Users = db.users;
 const Leads = db.leads;
+const followUp = db.followUp;
 const { textValidation, phoneValidation, IDValidation } = require('../helper/validation');
 
 // create lead route.
@@ -198,13 +199,21 @@ router.get('/view/:id',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead']
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead'],
+                include: [
+                    {
+                      model: followUp,
+                      as: "followUps",
+                      attributes: ['id','type', 'description', 'date', 'time', 'created_at'],
+                    },
+                ],
             })
             return res.status(200).json({
                 message: 'Lead recieved successfully',
                 leads
             });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({
                 message: 'Oops!! Something went wrong please try again.',
             });

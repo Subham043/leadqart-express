@@ -7,14 +7,16 @@ const helmet = require("helmet");
 const hpp = require('hpp');
 const cors = require('cors');
 const { limiter } = require('./middleware/rate-limiter');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 const port = process.env.PORT || 8081;
 //model-connection
 require('./model/connection');
 
+app.use(fileUpload());
 app.use(express.json()); //Used to parse JSON bodies
-app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: false })); //Parse URL-encoded bodies
 app.use(helmet());
 app.use(hpp());
 app.use(cookieParser())
@@ -51,6 +53,12 @@ let groupController = require('./controller/groups');
 app.use('/groups', groupController);
 let leadGroupController = require('./controller/leadGroup');
 app.use('/lead-group', leadGroupController);
+let followUpController = require('./controller/follow');
+app.use('/follow-up', followUpController);
+let contentMessage = require('./controller/contentMessage');
+app.use('/content-message', contentMessage);
+let contentFile = require('./controller/contentFile');
+app.use('/content-file', contentFile);
 
 
 app.listen(port,()=>{
