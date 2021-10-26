@@ -43,6 +43,8 @@ const followUp = require('./follow')(sequelize, DataTypes);
 const contentMessage = require('./contentMessage')(sequelize, DataTypes);
 //contentfilemodel
 const contentFile = require('./contentFile')(sequelize, DataTypes);
+//contentpagemodel
+const contentPage = require('./contentPage')(sequelize, DataTypes);
 //leadmodel
 const Lead = require('./leads')(sequelize, DataTypes);
 //groupmodel
@@ -95,6 +97,12 @@ contentFile.belongsTo(User, {
     foreignKey: "userId",
 });
 
+//user-contentPage relationships
+User.hasMany(contentPage, { as: "contentPage" });
+contentPage.belongsTo(User, {
+    foreignKey: "userId",
+});
+
 db.users = User;
 db.facebook = Facebook;
 db.leads = Lead;
@@ -103,5 +111,6 @@ db.leadsGroups = LeadGroup;
 db.followUp = followUp;
 db.contentMessage = contentMessage;
 db.contentFile = contentFile;
+db.contentPage = contentPage;
 
 module.exports = db;

@@ -5,8 +5,8 @@ const { Sequeize, Op, QueryTypes } = require('sequelize');
 const { verifyAccessToken } = require('../helper/jwt');
 const db = require('../model/connection');
 const Users = db.users;
-const contentFile = db.contentFile;
-const { textValidation, IDValidation } = require('../helper/validation');
+const contentPage = db.contentPage;
+const { emptyTextValidation, IDValidation } = require('../helper/validation');
 const uuid4 = require('uuid4');
 const fs = require('fs');
 
@@ -14,15 +14,18 @@ const fs = require('fs');
 router.post('/create/',
     verifyAccessToken,
     //custom validations
-    body('name').custom(async (value) => textValidation(value, 'name')),
-    body('upload').custom(async (value, { req }) => {
+    body('title').custom(async (value) => emptyTextValidation(value, 'title')),
+    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
+    body('youtubeVideo').custom(async (value) => emptyTextValidation(value, 'youtubeVideo')),
+    body('map').custom(async (value) => emptyTextValidation(value, 'map')),
+    body('image').custom(async (value, { req }) => {
         if(!req.files || Object.keys(req.files).length === 0){
             return Promise.reject('Please select a file');
         }
-        if (req.files.upload.mimetype == 'aplication/pdf' || req.files.upload.mimetype == 'image/png' || req.files.upload.mimetype == 'image/jpg' || req.files.upload.mimetype == 'image/jpeg') {
+        if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
             return true
         }
-        return Promise.reject('Invalid file type');
+        return Promise.reject('Invalid image type');
     }),
 
     async function (req, res) {
@@ -38,21 +41,21 @@ router.post('/create/',
             }
             // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
             try {
-                let sampleFile = req.files.upload;
+                let sampleFile = req.files.image;
                 let newFileName = `${uuid4()}-${sampleFile.name}`;
                 let uploadPath = 'public/uploads/' + newFileName;
     
                
-                let {name} = req.body;
+                let {title,description,youtubeVideo,map} = req.body;
                 // Use the mv() method to place the file somewhere on your server
                 sampleFile.mv(uploadPath, async function (err) {
                     if (err){
                         return res.status(500).json({ err });
                     }
-                    await contentFile.create({ name, upload: newFileName, userId: req.payload.id })
+                    await contentPage.create({ title,description,youtubeVideo,map, image: newFileName, userId: req.payload.id })
                 });
                 return res.status(200).json({
-                    message: 'content file stored successfully',
+                    message: 'content page stored successfully',
                 });
             } catch (error) {
                 return res.status(400).json({
@@ -67,9 +70,9 @@ router.post('/create/',
 router.delete('/delete/:id',
     verifyAccessToken,
     //custom validations
-    check('id').custom(async (value) => IDValidation(value, 'content message id')),
+    check('id').custom(async (value) => IDValidation(value, 'content page id')),
     check('id').custom(async (value, { req }) => {
-        let lead = await contentFile.findAll({
+        let lead = await contentPage.findAll({
             attributes: ['id'],
             where: {
                 id: value,
@@ -77,7 +80,7 @@ router.delete('/delete/:id',
             }
         })
         if (lead.length == 0) {
-            return Promise.reject('Invalid content file');
+            return Promise.reject('Invalid content page');
         }
     }),
 
@@ -90,27 +93,27 @@ router.delete('/delete/:id',
         } else {
 
             try {
-                let cFile = await contentFile.findOne({
-                    attributes: ['id','upload'],
+                let cFile = await contentPage.findOne({
+                    attributes: ['id','image'],
                     where: {
                         id: req.params.id,
                         userId: req.payload.id,
                     }
                 })
-                fs.unlink(`public/uploads/${cFile.dataValues.upload}`, async (err) => {
+                fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
                     if (err){
                         return res.status(400).json({
                             message: 'Oops!! Something went wrong please try again.',
                         });
                     }
-                    await contentFile.destroy({
+                    await contentPage.destroy({
                         where: {
                             id: req.params.id,
                             userId: req.payload.id,
                         }
                     })
                     return res.status(200).json({
-                        message: 'content file removed successfully',
+                        message: 'content page removed successfully',
                     });
                   });
                 
@@ -127,9 +130,9 @@ router.delete('/delete/:id',
 router.post('/edit/:id',
     verifyAccessToken,
     //custom validations
-    check('id').custom(async (value) => IDValidation(value, 'content file id')),
+    check('id').custom(async (value) => IDValidation(value, 'content page id')),
     check('id').custom(async (value, { req }) => {
-        let lead = await contentFile.findAll({
+        let lead = await contentPage.findAll({
             attributes: ['id'],
             where: {
                 id: value,
@@ -137,16 +140,19 @@ router.post('/edit/:id',
             }
         })
         if (lead.length == 0) {
-            return Promise.reject('Invalid content file');
+            return Promise.reject('Invalid content page');
         }
     }),
-    body('name').custom(async (value) => textValidation(value, 'name')),
-    body('upload').custom(async (value, { req }) => {
+    body('title').custom(async (value) => emptyTextValidation(value, 'title')),
+    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
+    body('youtubeVideo').custom(async (value) => emptyTextValidation(value, 'youtubeVideo')),
+    body('map').custom(async (value) => emptyTextValidation(value, 'map')),
+    body('image').custom(async (value, { req }) => {
         if(req.files){
-            if (req.files.upload.mimetype == 'aplication/pdf' || req.files.upload.mimetype == 'image/png' || req.files.upload.mimetype == 'image/jpg' || req.files.upload.mimetype == 'image/jpeg') {
+            if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
                 return true
             }
-            return Promise.reject('Invalid file type');
+            return Promise.reject('Invalid image type');
         }
         return true;
         
@@ -160,28 +166,28 @@ router.post('/edit/:id',
         } else {
             try{
                 if (req.files) {
-                    let cFile = await contentFile.findOne({
-                        attributes: ['id','upload'],
+                    let cFile = await contentPage.findOne({
+                        attributes: ['id','image'],
                         where: {
                             id: req.params.id,
                             userId: req.payload.id,
                         }
                     })
-                    fs.unlink(`public/uploads/${cFile.dataValues.upload}`, async (err) => {
+                    fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
                         if (err){
                             return res.status(400).json({
                                 message: 'Oops!! Something went wrong please try again.',
                             });
                         }
-                        let sampleFile = req.files.upload;
+                        let sampleFile = req.files.image;
                         let newFileName = `${uuid4()}-${sampleFile.name}`;
                         let uploadPath = 'public/uploads/' + newFileName;
-                        let {name} = req.body;
+                        let {title,description,youtubeVideo,map} = req.body;
                         sampleFile.mv(uploadPath, async function (err) {
                             if (err){
                                 return res.status(500).json({ err });
                             }
-                            await contentFile.update({ name, upload: newFileName },{
+                            await contentPage.update({ title,description,youtubeVideo,map, image: newFileName },{
                                 where: {
                                     id: req.params.id,
                                     userId: req.payload.id,
@@ -193,8 +199,8 @@ router.post('/edit/:id',
                         });
                       });
                 }else{
-                    let {name} = req.body;
-                    await contentFile.update({ name },{
+                    let {title,description,youtubeVideo,map} = req.body;
+                    await contentPage.update({ title,description,youtubeVideo,map },{
                         where: {
                             id: req.params.id,
                             userId: req.payload.id,
@@ -219,7 +225,7 @@ router.get('/view-all',
     verifyAccessToken,
     async function (req, res) {
         try {
-            let leads = await contentFile.findAll({
+            let leads = await contentPage.findAll({
                 where: {
                     userId: req.payload.id
                 },
@@ -228,8 +234,8 @@ router.get('/view-all',
                 ],
             })
             return res.status(200).json({
-                message: 'Content file recieved successfully',
-                contentFile:leads
+                message: 'Content page recieved successfully',
+                contentPage:leads
             });
         } catch (error) {
             return res.status(400).json({
@@ -246,7 +252,7 @@ router.get('/view/:id',
     //custom validations
     check('id').custom(async (value) => IDValidation(value, 'id')),
     check('id').custom(async (value, { req }) => {
-        let lead = await contentFile.findAll({
+        let lead = await contentPage.findAll({
             attributes: ['id'],
             where: {
                 id: value,
@@ -254,7 +260,7 @@ router.get('/view/:id',
             }
         })
         if (lead.length == 0) {
-            return Promise.reject('Invalid content file id');
+            return Promise.reject('Invalid content page id');
         }
     }),
     async function (req, res) {
@@ -265,7 +271,7 @@ router.get('/view/:id',
             });
         }
         try {
-            let leads = await contentFile.findOne({
+            let leads = await contentPage.findOne({
                 where: {
                     userId: req.payload.id,
                     id: req.params.id
@@ -275,8 +281,8 @@ router.get('/view/:id',
                 ],
             })
             return res.status(200).json({
-                message: 'Content file recieved successfully',
-                contentFile:leads
+                message: 'Content page recieved successfully',
+                contentPage:leads
             });
         } catch (error) {
             console.log(error);

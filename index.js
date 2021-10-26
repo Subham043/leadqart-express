@@ -59,6 +59,8 @@ let contentMessage = require('./controller/contentMessage');
 app.use('/content-message', contentMessage);
 let contentFile = require('./controller/contentFile');
 app.use('/content-file', contentFile);
+let contentPage = require('./controller/contentPage');
+app.use('/content-page', contentPage);
 
 
 app.listen(port,()=>{
