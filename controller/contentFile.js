@@ -28,13 +28,13 @@ router.post('/create/',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
 
             if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(400).json({ errors: 'No files were uploaded.' });
+                return res.status(200).json({ error: 'No files were uploaded.' });
             }
             // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
             try {
@@ -84,7 +84,7 @@ router.delete('/delete/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -99,8 +99,8 @@ router.delete('/delete/:id',
                 })
                 fs.unlink(`public/uploads/${cFile.dataValues.upload}`, async (err) => {
                     if (err){
-                        return res.status(400).json({
-                            message: 'Oops!! Something went wrong please try again.',
+                        return res.status(200).json({
+                            error: 'Oops!! Something went wrong please try again.',
                         });
                     }
                     await contentFile.destroy({
@@ -115,8 +115,8 @@ router.delete('/delete/:id',
                   });
                 
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -154,7 +154,7 @@ router.post('/edit/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -169,8 +169,8 @@ router.post('/edit/:id',
                     })
                     fs.unlink(`public/uploads/${cFile.dataValues.upload}`, async (err) => {
                         if (err){
-                            return res.status(400).json({
-                                message: 'Oops!! Something went wrong please try again.',
+                            return res.status(200).json({
+                                error: 'Oops!! Something went wrong please try again.',
                             });
                         }
                         let sampleFile = req.files.upload;
@@ -179,7 +179,7 @@ router.post('/edit/:id',
                         let {name} = req.body;
                         sampleFile.mv(uploadPath, async function (err) {
                             if (err){
-                                return res.status(500).json({ err });
+                                return res.status(200).json({ errors:err });
                             }
                             await contentFile.update({ name, upload: newFileName },{
                                 where: {
@@ -205,8 +205,8 @@ router.post('/edit/:id',
                     });
                 }
             }catch(err){
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
 
@@ -232,8 +232,8 @@ router.get('/view-all',
                 contentFile:leads
             });
         } catch (error) {
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 
@@ -260,7 +260,7 @@ router.get('/view/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         }
@@ -280,8 +280,8 @@ router.get('/view/:id',
             });
         } catch (error) {
             console.log(error);
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 

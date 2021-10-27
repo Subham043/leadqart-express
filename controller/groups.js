@@ -20,7 +20,7 @@ router.post('/create',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -32,8 +32,8 @@ router.post('/create',
                     message: 'Group stored successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -63,7 +63,7 @@ router.put('/edit/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -80,8 +80,8 @@ router.put('/edit/:id',
                     message: 'Group updated successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -110,7 +110,7 @@ router.delete('/delete/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -126,8 +126,8 @@ router.delete('/delete/:id',
                     message: 'Group deleted successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -160,8 +160,8 @@ router.get('/view-all',
                 groups
             });
         } catch (error) {
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 
@@ -187,7 +187,7 @@ router.get('/view/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         }
@@ -214,8 +214,8 @@ router.get('/view/:id',
                 groups
             });
         } catch (error) {
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 

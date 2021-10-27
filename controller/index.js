@@ -45,7 +45,7 @@ router.post('/register',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -56,7 +56,7 @@ router.post('/register',
             try {
                 await asyncMail(email, 'Email Verification', `<h3>Your otp is ${otp}</h3><br>`);
                 return res.status(200).json({
-                    message: 'Kindly check your email in order to verify your email',
+                    message: 'Kindly check your email for verification process',
                     id: encrypt(userData.dataValues.id)
                 });
             } catch (error) {
@@ -65,8 +65,8 @@ router.post('/register',
                         id: userData.dataValues.id
                     }
                 })
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -83,7 +83,7 @@ router.post('/verify/:userId',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -91,8 +91,8 @@ router.post('/verify/:userId',
             try {
                 id = await decrypt(req.params.userId);
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Invalid user id',
+                return res.status(200).json({
+                    error: 'Invalid user id',
                 });
             }
             let data = await Users.findAll({
@@ -102,8 +102,8 @@ router.post('/verify/:userId',
                 }
             })
             if (data.length == 0) {
-                return res.status(400).json({
-                    message: 'Invalid user id',
+                return res.status(200).json({
+                    error: 'Invalid user id',
                 });
             }
             let { otp } = req.body;
@@ -125,8 +125,8 @@ router.post('/verify/:userId',
                     message: 'Email verified',
                 });
             } else {
-                return res.status(400).json({
-                    message: 'Invalid OTP',
+                return res.status(200).json({
+                    error: 'Invalid OTP',
                 });
             }
         }
@@ -156,7 +156,7 @@ router.post('/forgot-password',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -196,7 +196,7 @@ router.post('/reset-password/:userId',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -204,8 +204,8 @@ router.post('/reset-password/:userId',
             try {
                 id = await decrypt(req.params.userId);
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Invalid user id',
+                return res.status(200).json({
+                    error: 'Invalid user id',
                 });
             }
             let data = await Users.findAll({
@@ -216,8 +216,8 @@ router.post('/reset-password/:userId',
                 }
             })
             if (data.length == 0) {
-                return res.status(400).json({
-                    message: 'Invalid user id',
+                return res.status(200).json({
+                    error: 'Invalid user id',
                 });
             }
             let { otp, password } = req.body;
@@ -240,8 +240,8 @@ router.post('/reset-password/:userId',
                     message: 'Password Reset Successful',
                 });
             } else {
-                return res.status(400).json({
-                    message: 'Invalid OTP',
+                return res.status(200).json({
+                    error: 'Invalid OTP',
                 });
             }
         }
@@ -273,7 +273,7 @@ router.post('/login',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -297,14 +297,14 @@ router.post('/login',
                         refreshToken
                     });
                 } else {
-                    return res.status(400).json({
-                        message: 'Invalid Password',
+                    return res.status(200).json({
+                        error: 'Invalid Password',
                     });
                 }
             } catch (error) {
                 console.log(error)
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -316,8 +316,8 @@ router.get('/refresh-token',
     async function (req, res) {
         try {
             if(!req.headers['refreshtoken']){
-                return res.status(401).json({
-                    message: 'Unauthorised',
+                return res.status(200).json({
+                    error: 'Unauthorised',
                 });
             }
             const rToken = req.headers['refreshtoken'];
@@ -333,8 +333,8 @@ router.get('/refresh-token',
             });
         } catch (error) {
             console.log(error)
-            return res.status(400).json({
-                message: 'Unauthorised',
+            return res.status(200).json({
+                error: 'Unauthorised',
             });
         }
 

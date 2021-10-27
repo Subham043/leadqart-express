@@ -19,7 +19,7 @@ router.post('/create/',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -31,8 +31,8 @@ router.post('/create/',
                     message: 'content message stored successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -60,7 +60,7 @@ router.delete('/delete/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -76,8 +76,8 @@ router.delete('/delete/:id',
                     message: 'content message removed successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -106,7 +106,7 @@ verifyAccessToken,
 async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({
+        return res.status(200).json({
             errors: errors.mapped(),
         });
     } else {
@@ -122,8 +122,8 @@ async function (req, res) {
                 message: 'content message updated successfully',
             });
         } catch (error) {
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
         
@@ -151,8 +151,8 @@ router.get('/view-all',
                 contentMessage:leads
             });
         } catch (error) {
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 
@@ -179,7 +179,7 @@ router.get('/view/:id',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         }
@@ -199,8 +199,8 @@ router.get('/view/:id',
             });
         } catch (error) {
             console.log(error);
-            return res.status(400).json({
-                message: 'Oops!! Something went wrong please try again.',
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
             });
         }
 

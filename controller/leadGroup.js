@@ -59,7 +59,7 @@ router.post('/create',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -79,8 +79,8 @@ router.post('/create',
                 });
             } catch (error) {
                 console.log(error);
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
@@ -133,7 +133,7 @@ router.delete('/delete/:leadId/:groupId',
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: errors.mapped(),
             });
         } else {
@@ -149,8 +149,8 @@ router.delete('/delete/:leadId/:groupId',
                     message: 'Lead removed successfully from group',
                 });
             } catch (error) {
-                return res.status(400).json({
-                    message: 'Oops!! Something went wrong please try again.',
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
                 });
             }
         }
