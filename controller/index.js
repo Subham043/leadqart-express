@@ -56,7 +56,7 @@ router.post('/register',
             try {
                 await asyncMail(email, 'Email Verification', `<h3>Your otp is ${otp}</h3><br>`);
                 return res.status(200).json({
-                    message: 'Kindly check your email in order to verify your email',
+                    message: 'Kindly check your email for verification process',
                     id: encrypt(userData.dataValues.id)
                 });
             } catch (error) {
