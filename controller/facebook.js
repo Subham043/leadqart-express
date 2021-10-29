@@ -4,6 +4,7 @@ const got = require('got');
 const { verifyAccessTokenCookie } = require('../helper/jwt');
 const db = require('../model/connection');
 const Facebook = db.facebook;
+const Webhook = db.Webhook;
 
 
 //facebook login redirection
@@ -178,13 +179,14 @@ router.post('/webhook', (req, res) => {
   
         // console.log(body.entry.changes);
       // Iterates over each entry - there may be multiple if batched
-      body.entry.forEach(function(entry) {
+      body.entry.forEach(async function(entry) {
   
         // Gets the message. entry.messaging is an array, but 
         // will only ever contain one message, so we get index 0
         // let webhook_event = entry.messaging[0];
         // let webhook_event = entry.messaging;
-        console.log(entry.changes.value);
+        console.log(entry);
+        await Webhook.create({ message:entry })
       });
   
       // Returns a '200 OK' response to all requests

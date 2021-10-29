@@ -51,6 +51,8 @@ const Lead = require('./leads')(sequelize, DataTypes);
 const Group = require('./groups')(sequelize, DataTypes);
 //lead-groupmodel
 const LeadGroup = require('./leadsGroups')(sequelize, DataTypes);
+//webhook
+const Webhook = require('./webhook')(sequelize, DataTypes);
 
 //user-lead relationships
 User.hasMany(Lead, { as: "leads" });
@@ -112,5 +114,6 @@ db.followUp = followUp;
 db.contentMessage = contentMessage;
 db.contentFile = contentFile;
 db.contentPage = contentPage;
+db.Webhook = Webhook;
 
 module.exports = db;
