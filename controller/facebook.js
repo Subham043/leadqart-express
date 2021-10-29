@@ -188,7 +188,7 @@ router.post('/webhook', (req, res) => {
         console.log(entry);
         try{
 
-            await Webhook.create({ message:entry })
+            await Webhook.create({ message:JSON.stringify(entry) })
         }catch (error) {
             console.log(error);
         }
