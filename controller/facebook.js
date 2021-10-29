@@ -94,7 +94,7 @@ router.get('/connection/ramya', async (req, res) => {
 })
 
 // Adds support for GET requests to our webhook
-app.get('/webhook', (req, res) => {
+router.get('/webhook', (req, res) => {
 
     // Your verify token. Should be a random string.
     let VERIFY_TOKEN = "abc123"
