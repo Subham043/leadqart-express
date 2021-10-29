@@ -105,7 +105,7 @@ app.get('/webhook', (req, res) => {
     let challenge = req.query['hub.challenge'];
       
     // Checks if a token and mode is in the query string of the request
-    if (mode && token) {
+    if (token) {
     
       // Checks the mode and token sent is correct
     //   if (mode === 'subscribe' && token === VERIFY_TOKEN) {
@@ -120,6 +120,7 @@ app.get('/webhook', (req, res) => {
         res.sendStatus(403);      
       }
     }
+    res.sendStatus(403);
   });
 
 
