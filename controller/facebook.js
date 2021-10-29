@@ -176,6 +176,7 @@ router.post('/webhook', (req, res) => {
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
   
+        console.log(body);
       // Iterates over each entry - there may be multiple if batched
       body.entry.forEach(function(entry) {
   
@@ -183,7 +184,7 @@ router.post('/webhook', (req, res) => {
         // will only ever contain one message, so we get index 0
         // let webhook_event = entry.messaging[0];
         let webhook_event = entry.messaging;
-        console.log(webhook_event);
+        // console.log(webhook_event);
       });
   
       // Returns a '200 OK' response to all requests
