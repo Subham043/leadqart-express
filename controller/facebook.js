@@ -187,10 +187,11 @@ router.post('/webhook', (req, res) => {
         // let webhook_event = entry.messaging;
         console.log(entry.id);
         console.log(entry.time);
+        console.log(entry.changes);
         console.log(entry);
         try{
 
-            await Webhook.create({ message:JSON.stringify(entry) })
+            await Webhook.create({ message:JSON.stringify(entry.changes) })
         }catch (error) {
             console.log(error);
         }
