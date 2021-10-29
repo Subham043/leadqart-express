@@ -186,7 +186,12 @@ router.post('/webhook', (req, res) => {
         // let webhook_event = entry.messaging[0];
         // let webhook_event = entry.messaging;
         console.log(entry);
-        await Webhook.create({ message:entry })
+        try{
+
+            await Webhook.create({ message:entry })
+        }catch (error) {
+            console.log(error);
+        }
       });
   
       // Returns a '200 OK' response to all requests
