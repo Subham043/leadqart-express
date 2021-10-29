@@ -93,6 +93,51 @@ router.get('/connection/ramya', async (req, res) => {
     
 })
 
+
+//manage_pages permission
+//get page information using fb token
+router.get('/pages/:fbid/:token', async (req, res) => {
+    try {
+        const fbid = req.params.fbid;
+        const token = req.params.token;
+        // const resp = await got(`https://graph.facebook.com/v9.0/${fbid}/accounts?access_token=${token}`).json();
+        const resp = await got(`https://graph.facebook.com/v9.0/me/accounts?access_token=${token}`).json();
+        let page_response = [];
+        let page_object = {};
+        resp.data.map((item) => {
+            page_object.access_token=item.access_token;
+            page_object.name=item.name;
+            page_object.id=item.id;
+            page_response.push(page_object);
+            page_object = {}
+        })
+        return res.status(200).json({response:page_response});
+        // return res.status(200).json({response:page_response});
+    } catch (error) {
+        console.log(error);
+        return res.status(400);
+    }
+})
+
+//subscribe to webhook using page information from fb token
+router.get('/pages/subscribe/:page_id/:page_token', async (req, res) => {
+    try {
+        const page_id = req.params.page_id;
+        const page_token = req.params.page_token;
+        const resp = await got.post(`https://graph.facebook.com/v9.0/${page_id}/subscribed_apps`,{
+            json:{
+                access_token:page_token,
+                subscribed_fields: 'leadgen'
+            },
+            responseType: 'json'
+        })
+        return res.status(200).json({response:resp.body});
+    } catch (error) {
+        console.log(error);
+        return res.status(400);
+    }
+})
+
 // Adds support for GET requests to our webhook
 router.get('/webhook', (req, res) => {
 
@@ -111,7 +156,7 @@ router.get('/webhook', (req, res) => {
       if (mode === 'subscribe' && token === VERIFY_TOKEN) {
         
         // Responds with the challenge token from the request
-        console.log('WEBHOOK_VERIFIED');
+        console.log(challenge);
         res.status(200).send(challenge);
       
       } else {
@@ -119,6 +164,34 @@ router.get('/webhook', (req, res) => {
         res.sendStatus(403);      
       }
     }
+  });
+
+
+
+// Creates the endpoint for our webhook 
+router.post('/webhook', (req, res) => {  
+ 
+    let body = req.body;
+  
+    // Checks this is an event from a page subscription
+    if (body.object === 'page') {
+  
+      // Iterates over each entry - there may be multiple if batched
+      body.entry.forEach(function(entry) {
+  
+        // Gets the message. entry.messaging is an array, but 
+        // will only ever contain one message, so we get index 0
+        let webhook_event = entry.messaging[0];
+        console.log(webhook_event);
+      });
+  
+      // Returns a '200 OK' response to all requests
+      res.status(200).send('EVENT_RECEIVED');
+    } else {
+      // Returns a '404 Not Found' if event is not from a page subscription
+      res.sendStatus(404);
+    }
+  
   });
 
 
