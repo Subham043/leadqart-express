@@ -21,7 +21,7 @@ module.exports = {
     },
     verifyAccessToken: (req, res, next) => {
         if(!req.headers['authorization']){
-            return res.status(401).json({
+            return res.status(200).json({
                 message: 'Unauthorised',
             });
         }
@@ -30,7 +30,7 @@ module.exports = {
         const token = bearerToken[1];
         JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
             if(err) {
-                return res.status(401).json({
+                return res.status(200).json({
                     message: 'Unauthorised',
                 });
             }
@@ -46,7 +46,7 @@ module.exports = {
         JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
             if(err) {
                 console.log(err)
-                return res.status(400).render('connection');
+                return res.status(200).render('connection');
             }
             req.payload = payload;
             next();
