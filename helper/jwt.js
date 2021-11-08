@@ -22,7 +22,7 @@ module.exports = {
     verifyAccessToken: (req, res, next) => {
         if(!req.headers['authorization']){
             return res.status(200).json({
-                message: 'Unauthorised',
+                error: 'Unauthorised',
             });
         }
         const authHeader = req.headers['authorization'];
@@ -31,7 +31,7 @@ module.exports = {
         JWT.verify(token,process.env.JWTRSECURITYKEYACCESS,(err,payload) => {
             if(err) {
                 return res.status(200).json({
-                    message: 'Unauthorised',
+                    error: 'Unauthorised',
                 });
             }
             req.payload = payload;
