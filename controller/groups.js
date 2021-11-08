@@ -151,7 +151,7 @@ router.get('/view-all',
                     {
                       model: Leads,
                       as: "leads",
-                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead'],
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
                     },
                 ],
             })
@@ -205,7 +205,7 @@ router.get('/view/:id',
                     {
                       model: Leads,
                       as: "leads",
-                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead'],
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
                     },
                 ],
             })

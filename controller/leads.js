@@ -157,7 +157,7 @@ router.get('/view-all',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead']
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo']
             })
             return res.status(200).json({
                 message: 'Lead recieved successfully',
@@ -205,7 +205,7 @@ router.get('/view/:id',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead'],
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
                 include: [
                     {
                       model: followUp,

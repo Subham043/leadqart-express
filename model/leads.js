@@ -26,11 +26,23 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        name: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        email: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         phone: {
           type: DataTypes.INTEGER,
           allowNull: true,
         },
         job: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        extraInfo: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
