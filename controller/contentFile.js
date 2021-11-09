@@ -16,6 +16,8 @@ router.post('/create/',
     //custom validations
     body('name').custom(async (value) => textValidation(value, 'name')),
     body('upload').custom(async (value, { req }) => {
+        console.log(req.files.upload.mimetype);
+        console.log(req.files.upload);
         if(!req.files || Object.keys(req.files).length === 0){
             return Promise.reject('Please select a file');
         }
