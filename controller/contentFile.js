@@ -19,10 +19,10 @@ router.post('/create/',
         if(!req.files || Object.keys(req.files).length === 0){
             return Promise.reject('Please select a file');
         }
-        if (req.files.upload.mimetype == 'aplication/pdf' || req.files.upload.mimetype == 'image/png' || req.files.upload.mimetype == 'image/jpg' || req.files.upload.mimetype == 'image/jpeg') {
-            return true
+        if (req.files.upload.mimetype != 'application/pdf') {
+            return Promise.reject('Invalid file type');
         }
-        return Promise.reject('Invalid file type');
+        return true;
     }),
 
     async function (req, res) {
