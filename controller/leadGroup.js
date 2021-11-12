@@ -67,6 +67,11 @@ router.post('/create',
 
             try {
                 let error = [];
+                await LeadsGroups.destroy({
+                    where: {
+                        lead_id: input[0].lead_id,
+                    }
+                })
                 input.forEach(async (input) => {
                     try {
                         await LeadsGroups.create(input);
