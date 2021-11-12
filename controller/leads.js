@@ -107,7 +107,8 @@ router.put('/edit/:id',
 router.put('/edit-note/:id',
     //custom validations
     body('notes').custom(async (value) => emptyTextValidation(value, 'notes')),
-    check('id').custom(async (value) => IDValidation(value, 'id')),
+    // check('id').custom(async (value) => IDValidation(value, 'id')),
+    check('id', 'Lead ID is required').isEmpty(),
     check('id').custom(async (value , { req }) => {
         let lead = await Leads.findAll({
             attributes: ['id'],
