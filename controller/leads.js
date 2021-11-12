@@ -58,6 +58,7 @@ router.put('/edit/:id',
     body('ad').custom(async (value) => textValidation(value, 'ad')),
     body('formName').custom(async (value) => textValidation(value, 'formName')),
     body('job').custom(async (value) => textValidation(value, 'job')),
+    body('notes').custom(async (value) => textValidation(value, 'notes')),
     //custom validation for phone
     body('phone').custom(async (value) => phoneValidation(value)),
     check('id').custom(async (value) => IDValidation(value, 'id')),
