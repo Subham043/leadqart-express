@@ -206,7 +206,7 @@ router.get('/view-all',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes'],
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes', 'created_at'],
                 include: [
                     {
                         model: Groups,
@@ -262,7 +262,7 @@ router.get('/view/:id',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes'],
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes', 'created_at'],
                 include: [
                     {
                         model: Groups,
