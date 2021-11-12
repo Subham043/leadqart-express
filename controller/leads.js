@@ -82,10 +82,10 @@ router.put('/edit/:id',
                 errors: errors.mapped(),
             });
         } else {
-            let { leadSource, facebookPage, campaign, adset, ad, formName, job, phone } = req.body;
+            let { leadSource, facebookPage, campaign, adset, ad, formName, job, phone, notes } = req.body;
 
             try {
-                await Leads.update({ leadSource, facebookPage, campaign, adset, ad, formName, job, phone }, {
+                await Leads.update({ leadSource, facebookPage, campaign, adset, ad, formName, job, phone, notes }, {
                     where: {
                         id: req.params.id,
                         userId: req.payload.id,
