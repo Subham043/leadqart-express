@@ -209,23 +209,9 @@ router.get('/view-all',
                 attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes'],
                 include: [
                     {
-                      model: followUp,
-                      as: "followUps",
-                      attributes: ['id','type', 'description', 'date', 'time', 'created_at'],
-                    },
-                ],
-                include: [
-                    {
                         model: Groups,
                         as: "groups",
                         attributes: ['id', 'name'],
-                    },
-                ],
-                include: [
-                    {
-                        model: Activity,
-                        as: "activity",
-                        attributes: ['id', 'type', 'timestamp', 'created_at'],
                     },
                 ],
             })
@@ -279,23 +265,9 @@ router.get('/view/:id',
                 attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes'],
                 include: [
                     {
-                      model: followUp,
-                      as: "followUps",
-                      attributes: ['id','type', 'description', 'date', 'time', 'created_at'],
-                    },
-                ],
-                include: [
-                    {
                         model: Groups,
                         as: "groups",
                         attributes: ['id', 'name'],
-                    },
-                ],
-                include: [
-                    {
-                        model: Activity,
-                        as: "activity",
-                        attributes: ['id', 'type', 'timestamp', 'created_at'],
                     },
                 ],
             })
