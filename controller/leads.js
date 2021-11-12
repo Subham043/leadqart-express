@@ -103,6 +103,52 @@ router.put('/edit/:id',
 
     })
 
+// edit lead note route.
+router.put('/edit-note/:id',
+    //custom validations
+    body('notes').custom(async (value) => emptyTextValidation(value, 'notes')),
+    check('id').custom(async (value) => IDValidation(value, 'id')),
+    check('id').custom(async (value , { req }) => {
+        let lead = await Leads.findAll({
+            attributes: ['id'],
+            where: {
+                id: value,
+                userId: req.payload.id,
+            }
+        })
+        if (lead.length == 0) {
+            return Promise.reject('Invalid lead');
+        }
+    }),
+    verifyAccessToken,
+    async function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).json({
+                errors: errors.mapped(),
+            });
+        } else {
+            let { notes } = req.body;
+
+            try {
+                await Leads.update({ notes }, {
+                    where: {
+                        id: req.params.id,
+                        userId: req.payload.id,
+                    }
+                })
+                return res.status(200).json({
+                    message: 'Lead updated successfully',
+                });
+            } catch (error) {
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
+                });
+            }
+        }
+
+    })
+
 // delete lead route.
 router.delete('/delete/:id',
     //custom validations
