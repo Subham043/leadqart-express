@@ -76,9 +76,11 @@ module.exports={
     },
 
     emptyTextValidation: (value, field)=>{
+        if (!isEmpty(value)) {
         if (!value.match(/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&+=,]+$/i)) {
             return Promise.reject(`Please enter a valid ${field}`);
         }
+    }
     },
 
     IDValidation: (value, field)=>{
