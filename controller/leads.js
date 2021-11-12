@@ -107,20 +107,6 @@ router.put('/edit/:id',
 router.post('/edit-note/:id',
     //custom validations
     body('notes').custom(async (value) => emptyTextValidation(value, 'notes')),
-    // check('id').custom(async (value) => IDValidation(value, 'id')),
-    check('id', 'Lead ID is required').isEmpty(),
-    check('id').custom(async (value , { req }) => {
-        let lead = await Leads.findAll({
-            attributes: ['id'],
-            where: {
-                id: value,
-                userId: req.payload.id,
-            }
-        })
-        if (lead.length == 0) {
-            return Promise.reject('Invalid lead');
-        }
-    }),
     verifyAccessToken,
     async function (req, res) {
         const errors = validationResult(req);
@@ -131,6 +117,19 @@ router.post('/edit-note/:id',
         } else {
             let { notes } = req.body;
 
+            let lead = await Leads.findAll({
+                attributes: ['id'],
+                where: {
+                    id: req.params.id,
+                    userId: req.payload.id,
+                }
+            })
+            if (lead.length == 0) {
+                return res.status(200).json({
+                    error: 'Invalid lead',
+                });
+            }
+
             try {
                 await Leads.update({ notes }, {
                     where: {
@@ -139,7 +138,7 @@ router.post('/edit-note/:id',
                     }
                 })
                 return res.status(200).json({
-                    message: 'Lead updated successfully',
+                    message: 'Notes updated successfully',
                 });
             } catch (error) {
                 return res.status(200).json({
