@@ -104,7 +104,7 @@ router.put('/edit/:id',
     })
 
 // edit lead note route.
-router.put('/edit-note/:id',
+router.post('/edit-note/:id',
     //custom validations
     body('notes').custom(async (value) => emptyTextValidation(value, 'notes')),
     // check('id').custom(async (value) => IDValidation(value, 'id')),
