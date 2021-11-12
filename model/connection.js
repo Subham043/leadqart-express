@@ -51,6 +51,8 @@ const Lead = require('./leads')(sequelize, DataTypes);
 const Group = require('./groups')(sequelize, DataTypes);
 //lead-groupmodel
 const LeadGroup = require('./leadsGroups')(sequelize, DataTypes);
+//contentmessagemodel
+const Activity = require('./activity')(sequelize, DataTypes);
 //webhook
 const Webhook = require('./webhook')(sequelize, DataTypes);
 
@@ -87,6 +89,17 @@ followUp.belongsTo(Lead, {
     foreignKey: "leadId",
 });
 
+//lead-Activity relationships
+Lead.hasMany(Activity, { as: "activity" });
+Activity.belongsTo(Lead, {
+    foreignKey: "leadId",
+});
+//user-Activity relationships
+User.hasMany(Activity, { as: "activity" });
+Activity.belongsTo(User, {
+    foreignKey: "userId",
+});
+
 //user-contentMessage relationships
 User.hasMany(contentMessage, { as: "contentMessage" });
 contentMessage.belongsTo(User, {
@@ -114,6 +127,7 @@ db.followUp = followUp;
 db.contentMessage = contentMessage;
 db.contentFile = contentFile;
 db.contentPage = contentPage;
+db.Activity = Activity;
 db.Webhook = Webhook;
 
 module.exports = db;

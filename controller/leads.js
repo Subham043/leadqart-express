@@ -8,6 +8,7 @@ const Users = db.users;
 const Leads = db.leads;
 const Groups = db.groups;
 const followUp = db.followUp;
+const Activity = db.Activity;
 const { textValidation, phoneValidation, IDValidation, emptyTextValidation } = require('../helper/validation');
 
 // create lead route.
@@ -220,6 +221,13 @@ router.get('/view-all',
                         attributes: ['id', 'name'],
                     },
                 ],
+                include: [
+                    {
+                        model: Activity,
+                        as: "activity",
+                        attributes: ['id', 'type', 'timestamp', 'created_at'],
+                    },
+                ],
             })
             return res.status(200).json({
                 message: 'Lead recieved successfully',
@@ -281,6 +289,13 @@ router.get('/view/:id',
                         model: Groups,
                         as: "groups",
                         attributes: ['id', 'name'],
+                    },
+                ],
+                include: [
+                    {
+                        model: Activity,
+                        as: "activity",
+                        attributes: ['id', 'type', 'timestamp', 'created_at'],
                     },
                 ],
             })

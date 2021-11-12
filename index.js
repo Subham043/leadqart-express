@@ -61,6 +61,8 @@ let contentFile = require('./controller/contentFile');
 app.use('/content-file', contentFile);
 let contentPage = require('./controller/contentPage');
 app.use('/content-page', contentPage);
+let Activity = require('./controller/activity');
+app.use('/activity', Activity);
 
 
 app.listen(port,()=>{
