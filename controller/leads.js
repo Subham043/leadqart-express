@@ -6,6 +6,7 @@ const { verifyAccessToken } = require('../helper/jwt');
 const db = require('../model/connection');
 const Users = db.users;
 const Leads = db.leads;
+const Groups = db.groups;
 const followUp = db.followUp;
 const { textValidation, phoneValidation, IDValidation } = require('../helper/validation');
 
@@ -157,13 +158,28 @@ router.get('/view-all',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo']
+                attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
+                include: [
+                    {
+                      model: followUp,
+                      as: "followUps",
+                      attributes: ['id','type', 'description', 'date', 'time', 'created_at'],
+                    },
+                ],
+                include: [
+                    {
+                        model: Groups,
+                        as: "groups",
+                        attributes: ['id', 'name'],
+                    },
+                ],
             })
             return res.status(200).json({
                 message: 'Lead recieved successfully',
                 leads
             });
         } catch (error) {
+            console.log(error);
             return res.status(200).json({
                 error: 'Oops!! Something went wrong please try again.',
             });
@@ -211,6 +227,13 @@ router.get('/view/:id',
                       model: followUp,
                       as: "followUps",
                       attributes: ['id','type', 'description', 'date', 'time', 'created_at'],
+                    },
+                ],
+                include: [
+                    {
+                        model: Groups,
+                        as: "groups",
+                        attributes: ['id', 'name'],
                     },
                 ],
             })
