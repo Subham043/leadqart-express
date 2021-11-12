@@ -8,20 +8,20 @@ const Users = db.users;
 const Leads = db.leads;
 const Groups = db.groups;
 const followUp = db.followUp;
-const { textValidation, phoneValidation, IDValidation } = require('../helper/validation');
+const { textValidation, phoneValidation, IDValidation, emptyTextValidation } = require('../helper/validation');
 
 // create lead route.
 router.post('/create',
     //custom validations
-    body('leads.*.leadSource').custom(async (value) => textValidation(value, 'leadSource')),
-    body('leads.*.facebookPage').custom(async (value) => textValidation(value, 'facebookPage')),
-    body('leads.*.campaign').custom(async (value) => textValidation(value, 'campaign')),
-    body('leads.*.adset').custom(async (value) => textValidation(value, 'adset')),
-    body('leads.*.ad').custom(async (value) => textValidation(value, 'ad')),
-    body('leads.*.formName').custom(async (value) => textValidation(value, 'formName')),
-    body('leads.*.job').custom(async (value) => textValidation(value, 'job')),
+    body('leads.*.leadSource').custom(async (value) => emptyTextValidation(value, 'leadSource')),
+    body('leads.*.facebookPage').custom(async (value) => emptyTextValidation(value, 'facebookPage')),
+    body('leads.*.campaign').custom(async (value) => emptyTextValidation(value, 'campaign')),
+    body('leads.*.adset').custom(async (value) => emptyTextValidation(value, 'adset')),
+    body('leads.*.ad').custom(async (value) => emptyTextValidation(value, 'ad')),
+    body('leads.*.formName').custom(async (value) => emptyTextValidation(value, 'formName')),
+    body('leads.*.job').custom(async (value) => emptyTextValidation(value, 'job')),
     //custom validation for phone
-    body('leads.*.phone').custom(async (value) => phoneValidation(value)),
+    body('leads.*.phone').custom(async (value) => emptyTextValidation(value)),
     verifyAccessToken,
     async function (req, res) {
         const errors = validationResult(req);
@@ -51,16 +51,16 @@ router.post('/create',
 // edit lead route.
 router.put('/edit/:id',
     //custom validations
-    body('leadSource').custom(async (value) => textValidation(value, 'leadSource')),
-    body('facebookPage').custom(async (value) => textValidation(value, 'facebookPage')),
-    body('campaign').custom(async (value) => textValidation(value, 'campaign')),
-    body('adset').custom(async (value) => textValidation(value, 'adset')),
-    body('ad').custom(async (value) => textValidation(value, 'ad')),
-    body('formName').custom(async (value) => textValidation(value, 'formName')),
-    body('job').custom(async (value) => textValidation(value, 'job')),
-    body('notes').custom(async (value) => textValidation(value, 'notes')),
+    body('leadSource').custom(async (value) => emptyTextValidation(value, 'leadSource')),
+    body('facebookPage').custom(async (value) => emptyTextValidation(value, 'facebookPage')),
+    body('campaign').custom(async (value) => emptyTextValidation(value, 'campaign')),
+    body('adset').custom(async (value) => emptyTextValidation(value, 'adset')),
+    body('ad').custom(async (value) => emptyTextValidation(value, 'ad')),
+    body('formName').custom(async (value) => emptyTextValidation(value, 'formName')),
+    body('job').custom(async (value) => emptyTextValidation(value, 'job')),
+    body('notes').custom(async (value) => emptyTextValidation(value, 'notes')),
     //custom validation for phone
-    body('phone').custom(async (value) => phoneValidation(value)),
+    body('phone').custom(async (value) => emptyTextValidation(value)),
     check('id').custom(async (value) => IDValidation(value, 'id')),
     check('id').custom(async (value , { req }) => {
         let lead = await Leads.findAll({
