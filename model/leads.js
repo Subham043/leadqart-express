@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        notes: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         newLead: {
           type: DataTypes.INTEGER,
           allowNull: false,
