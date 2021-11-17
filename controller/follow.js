@@ -7,7 +7,7 @@ const db = require('../model/connection');
 const Users = db.users;
 const Leads = db.leads;
 const followUp = db.followUp;
-const { textValidation, IDValidation } = require('../helper/validation');
+const { textValidation, IDValidation, emptyTextValidation } = require('../helper/validation');
 
 
 // create follow-up route.
@@ -15,7 +15,7 @@ router.post('/create/:leadId',
     verifyAccessToken,
     //custom validations
     body('type').custom(async (value) => textValidation(value, 'type')),
-    body('description').custom(async (value) => textValidation(value, 'description')),
+    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
     body('timestamp').custom(async (value) => textValidation(value, 'timestamp')),
     check('leadId').custom(async (value, { req }) => {
         try {
@@ -126,7 +126,7 @@ verifyAccessToken,
         }
     }),
     body('type').custom(async (value) => textValidation(value, 'type')),
-    body('description').custom(async (value) => textValidation(value, 'description')),
+    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
     body('timestamp').custom(async (value) => textValidation(value, 'timestamp')),
 async function (req, res) {
     const errors = validationResult(req);
