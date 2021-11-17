@@ -16,7 +16,7 @@ router.post('/create/:leadId',
     //custom validations
     body('type').custom(async (value) => textValidation(value, 'type')),
     body('description').custom(async (value) => emptyTextValidation(value, 'description')),
-    body('timestamp').custom(async (value) => textValidation(value, 'timestamp')),
+    body('timestamp').custom(async (value) => emptyTextValidation(value, 'timestamp')),
     check('leadId').custom(async (value, { req }) => {
         try {
             let lead = await Leads.findAll({
@@ -127,7 +127,7 @@ verifyAccessToken,
     }),
     body('type').custom(async (value) => textValidation(value, 'type')),
     body('description').custom(async (value) => emptyTextValidation(value, 'description')),
-    body('timestamp').custom(async (value) => textValidation(value, 'timestamp')),
+    body('timestamp').custom(async (value) => emptyTextValidation(value, 'timestamp')),
 async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

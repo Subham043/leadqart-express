@@ -12,8 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         timestamp: {
           type: "TIMESTAMP",
-          defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
-          allowNull: false,
+          allowNull: true,
         },
         userId: {
           type: DataTypes.INTEGER,
