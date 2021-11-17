@@ -10,13 +10,10 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.TEXT,
           allowNull: true,
         },
-        date: {
-          type: "DATE",
-          allowNull: true,
-        },
-        time: {
-          type: DataTypes.STRING,
-          allowNull: true,
+        timestamp: {
+          type: "TIMESTAMP",
+          defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
         },
         userId: {
           type: DataTypes.INTEGER,
