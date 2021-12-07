@@ -115,6 +115,7 @@ router.delete('/delete/:id',
                   });
                 
             } catch (error) {
+                console.log(error);
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',
                 });
