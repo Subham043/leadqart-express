@@ -293,6 +293,24 @@ router.get('/view/:id',
 
     })
 
+    router.get('/view-page/:id', async (req, res) => {
+        try{
+            let leads = await contentPage.findOne({
+                where: {
+                    id: req.params.id
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+            })
+            return res.status(200).render('content_page',{leads});
+        }catch (error) {
+            console.log(error)
+            return res.status(400).render('error');
+        }
+        
+    })
+
 
 
 

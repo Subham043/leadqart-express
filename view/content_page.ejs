@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leadqart</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .main-image{
+            width: 100%;
+            height: auto;
+        }
+
+        .bg-color-gray{
+            background-color:#eee;
+        }
+        .bg-color-white{
+            background-color:#fff;
+        }
+        .shadow-gray{
+            box-shadow: 1px 1px 1px 1px #818181;
+        }
+        .no-padding{
+            padding:0;
+        }
+        p,Address{
+            font-size:18px;
+        }
+        .border-green{
+            border:1px solid rgb(4, 170, 4);
+        }
+        .radius-5{
+            border-radius: 0.5rem;
+        }
+        .radius-2{
+            border-radius: 0.2rem;
+        }
+        .text-green{
+            color: rgb(4, 170, 4);
+        }
+        .inline-block{
+            display: inline-block;
+        }
+        a{
+            text-decoration: none;
+        }
+        .justify-center{
+            justify-content: center;
+        }
+        .mr-1{
+            margin-right: 10px;
+        }
+    </style>
+  </head>
+
+  <body>
+    <!-- <div class="alert alert-success" role="alert">Connection Successfully established <%= leads %></div> -->
+    <div class="container-fluid no-padding">
+        <div class="col-12">
+            <img src="/uploads/<%= leads.image %>" class="main-image" alt="">
+        </div>
+        <div class="col-12 bg-color-gray px-3 py-3">
+            <div class="col-12 bg-color-white shadow-gray radius-2 px-3 py-2">
+                <h2 style="text-transform: capitalize;"><%= leads.title %></h2>
+                <p><%= leads.description %></p>
+                <Address>
+                    <b>Address</b>:<br>
+                    <%= leads.map %>
+                </Address>
+            </div>
+        </div>
+        <!-- <div class="col-12 bg-color-gray px-5 py-2">
+            <a href="" class="block col-12 bg-color-white border-green radius-2 px-1 py-1 text-center">
+                <p class="text-green">Want to find out more?</p>
+                <h3 class="text-green"><i class="fab fa-whatsapp"></i> Contact Me</h3>
+            </a>
+        </div> -->
+        <div class="col-12 bg-color-white px-5 py-2">
+            <div class="col-12 text-center">
+                <p>Shared By:</p>
+                <p>Subham saha</p>
+                <p>987654321</p>
+            </div>
+            <div class="row justify-center">
+                <a href="" class="col-5 bg-color-white border-green radius-2 px-1 py-1 text-center mr-1">
+                    <h3 class="text-green"><i class="fas fa-phone-alt"></i></h3>
+                    <h3 class="text-green">Call</h3>
+                </a>
+                <a href="" class="col-5 bg-color-white border-green radius-2 px-1 py-1 text-center">
+                    <h3 class="text-green"><i class="fab fa-whatsapp"></i></h3>
+                    <h3 class="text-green">Whatsapp</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

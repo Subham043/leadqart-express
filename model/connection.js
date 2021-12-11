@@ -1,17 +1,17 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-// const sequelize = new Sequelize('leadqart', 'root', '', {
-//     host: 'localhost',
-//     dialect: 'mysql',
-//     logging: false, //sql query logging in console
-//     pool: { max: 5, min: 0, idle: 10000 }
-// })
-const sequelize = new Sequelize('a5inepro_leadqart', 'a5inepro_a5ineprojects9', '%JdE89iD$Jov',{
-    host:'209.99.16.221',
+const sequelize = new Sequelize('leadqart', 'root', '', {
+    host: 'localhost',
     dialect: 'mysql',
     logging: false, //sql query logging in console
-    pool:{max:5,min:0,idle:10000}
+    pool: { max: 5, min: 0, idle: 10000 }
 })
+// const sequelize = new Sequelize('a5inepro_leadqart', 'a5inepro_a5ineprojects9', '%JdE89iD$Jov',{
+//     host:'209.99.16.221',
+//     dialect: 'mysql',
+//     logging: false, //sql query logging in console
+//     pool:{max:5,min:0,idle:10000}
+// })
 
 sequelize.authenticate()
     .then(() => {
