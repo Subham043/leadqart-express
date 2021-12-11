@@ -302,7 +302,16 @@ router.get('/view/:id',
                 order: [
                     ['id', 'DESC'],
                 ],
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['id', 'name', 'phone'],
+                    },
+                ],
             })
+            if(Object.keys(leads).length === 0){
+                return res.status(400).render('error');
+            }
             return res.status(200).render('content_page',{leads});
         }catch (error) {
             console.log(error)
