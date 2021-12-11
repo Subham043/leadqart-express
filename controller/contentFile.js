@@ -115,6 +115,7 @@ router.delete('/delete/:id',
                   });
                 
             } catch (error) {
+                console.log(error);
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',
                 });
@@ -143,7 +144,7 @@ router.post('/edit/:id',
     body('name').custom(async (value) => textValidation(value, 'name')),
     body('upload').custom(async (value, { req }) => {
         if(req.files){
-            if (req.files.upload.mimetype == 'aplication/pdf' || req.files.upload.mimetype == 'image/png' || req.files.upload.mimetype == 'image/jpg' || req.files.upload.mimetype == 'image/jpeg') {
+            if (req.files.upload.mimetype == 'application/pdf' || req.files.upload.mimetype == 'image/png' || req.files.upload.mimetype == 'image/jpg' || req.files.upload.mimetype == 'image/jpeg') {
                 return true
             }
             return Promise.reject('Invalid file type');
