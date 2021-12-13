@@ -223,6 +223,38 @@ router.get('/view-via-lead/:leadId',
 
     })
 
+    router.get('/get-someday',
+    verifyAccessToken,
+    async function (req, res) {
+        try {
+
+            let groups = await followUp.findAll({
+                where: {
+                    userId: req.payload.id,
+                    type: 'SOMEDAY'
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [
+                    {
+                      model: Leads,
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
+                    },
+                ],
+            })
+            return res.status(200).json({
+                message: 'Follow Up count recieved successfully',
+                followup:groups
+            });
+        } catch (error) {
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+    })
+
     router.get('/get-today-count',
     verifyAccessToken,
     async function (req, res) {
@@ -244,6 +276,42 @@ router.get('/view-via-lead/:leadId',
             return res.status(200).json({
                 message: 'Follow Up count recieved successfully',
                 count:groups.length
+            });
+        } catch (error) {
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+    })
+
+    router.get('/get-today',
+    verifyAccessToken,
+    async function (req, res) {
+        try {
+            const TODAY_START = new Date().setHours(0, 0, 0, 0);
+            const NOW = new Date();
+            let groups = await followUp.findAll({
+                where: {
+                    userId: req.payload.id,
+                    timestamp: { 
+                        [Op.gt]: TODAY_START,
+                        [Op.lt]: NOW
+                    },
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [
+                    {
+                      model: Leads,
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
+                    },
+                ],
+            })
+            return res.status(200).json({
+                message: 'Follow Up count recieved successfully',
+                followup:groups
             });
         } catch (error) {
             return res.status(200).json({
@@ -306,8 +374,8 @@ router.get('/view-via-lead/:leadId',
             })
             console.log(groups);
             return res.status(200).json({
-                message: 'Follow Up count recieved successfully',
-                count:groups
+                message: 'Follow Up recieved successfully',
+                followup:groups
             });
         } catch (error) {
             console.log(error);
@@ -338,6 +406,40 @@ router.get('/view-via-lead/:leadId',
             return res.status(200).json({
                 message: 'Follow Up count recieved successfully',
                 count:groups.length
+            });
+        } catch (error) {
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+    })
+
+    router.get('/get-upcoming',
+    verifyAccessToken,
+    async function (req, res) {
+        try {
+            const NOW = new Date();
+            let groups = await followUp.findAll({
+                where: {
+                    userId: req.payload.id,
+                    timestamp: { 
+                        [Op.gt]: NOW
+                    },
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [
+                    {
+                      model: Leads,
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
+                    },
+                ],
+            })
+            return res.status(200).json({
+                message: 'Follow Up count recieved successfully',
+                followup:groups
             });
         } catch (error) {
             return res.status(200).json({
