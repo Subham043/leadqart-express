@@ -215,7 +215,7 @@ router.get('/pages/subscribe/:page_id/:page_token', verifyAccessToken, async (re
             },
             responseType: 'json'
         })
-        if(resp.body.success==true) {
+        if(resp.body.response.success==true) {
             let fbPage = await FacebookPage.findAll({
                 attributes: ['id', 'userId'],
                 where: {
