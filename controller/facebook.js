@@ -102,7 +102,6 @@ router.get('/token/detail',
     async (req, res) => {
         try {
             let facebook = await Facebook.findAll({
-                attributes: ['id', 'userId'],
                 where: {
                     userId: req.payload.id,
                 }
@@ -110,7 +109,7 @@ router.get('/token/detail',
             if (facebook.length == 0) {
                 return res.status(200).json({
                     message: 'No facebook token details available',
-                    facebook:{}
+                    facebookDetails:{}
                 });
             } else {
                 let facebookDetails = await Facebook.findOne({
@@ -120,7 +119,7 @@ router.get('/token/detail',
                 })
                 return res.status(200).json({
                     message: 'Facebook token details recieved successfully',
-                    facebook:facebookDetails
+                    facebookDetails:facebookDetails
                 });
             }
             
