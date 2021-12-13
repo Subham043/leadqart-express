@@ -5,6 +5,7 @@ const { verifyAccessToken, verifyAccessTokenCookie } = require('../helper/jwt');
 const { body, validationResult } = require('express-validator');
 const db = require('../model/connection');
 const Facebook = db.facebook;
+const FacebookPage = db.facebookPage;
 const Webhook = db.Webhook;
 const { textValidation } = require('../helper/validation');
 
@@ -113,7 +114,6 @@ router.get('/token/detail',
                 });
             } else {
                 let facebookDetails = await Facebook.findOne({
-                    attributes: ['id', 'userId'],
                     where: {
                         userId: req.payload.id,
                     }
@@ -181,7 +181,7 @@ router.get('/connection/ramya', async (req, res) => {
 
 //manage_pages permission
 //get page information using fb token
-router.get('/pages/:fbid/:token', async (req, res) => {
+router.get('/pages/:fbid/:token', verifyAccessToken, async (req, res) => {
     try {
         const fbid = req.params.fbid;
         const token = req.params.token;
@@ -205,7 +205,7 @@ router.get('/pages/:fbid/:token', async (req, res) => {
 })
 
 //subscribe to webhook using page information from fb token
-router.get('/pages/subscribe/:page_id/:page_token', async (req, res) => {
+router.get('/pages/subscribe/:page_id/:page_token', verifyAccessToken, async (req, res) => {
     try {
         const page_id = req.params.page_id;
         const page_token = req.params.page_token;
@@ -216,6 +216,25 @@ router.get('/pages/subscribe/:page_id/:page_token', async (req, res) => {
             },
             responseType: 'json'
         })
+        if(resp.body.success==true) {
+            let fbPage = await FacebookPage.findAll({
+                attributes: ['id', 'userId'],
+                where: {
+                    userId: req.payload.id,
+                    fbPageId:page_id
+                }
+            })
+            if (facebook.length == 0) {
+                await Facebook.create({ userId: req.payload.id, token: page_token, fbPageId:page_id })
+            } else {
+                await Facebook.update({ token: page_token }, {
+                    where: {
+                        userId: req.payload.id,
+                        fbPageId:page_id
+                    }
+                })
+            }
+        }
         return res.status(200).json({ response: resp.body });
     } catch (error) {
         console.log(error);

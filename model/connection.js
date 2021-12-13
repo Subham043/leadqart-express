@@ -37,6 +37,7 @@ db.sequelize.sync({ force: false })
 const User = require('./users')(sequelize, DataTypes);
 //facebookmodel
 const Facebook = require('./facebook')(sequelize, DataTypes);
+const FacebookPage = require('./facebookPage')(sequelize, DataTypes);
 //followupmodel
 const followUp = require('./follow')(sequelize, DataTypes);
 //contentmessagemodel
@@ -120,6 +121,7 @@ contentPage.belongsTo(User, {
 
 db.users = User;
 db.facebook = Facebook;
+db.facebookPage = FacebookPage;
 db.leads = Lead;
 db.groups = Group;
 db.leadsGroups = LeadGroup;
