@@ -229,6 +229,42 @@ router.get('/view-all',
     })
 
 
+    // read all lead route.
+router.get('/view-all/new-leads',
+verifyAccessToken,
+async function (req, res) {
+    try {
+        let leads = await Leads.findAll({
+            where: {
+                userId: req.payload.id,
+                newLead:1
+            },
+            order: [
+                ['id', 'DESC'],
+            ],
+            attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo', 'notes', 'created_at'],
+            include: [
+                {
+                    model: Groups,
+                    as: "groups",
+                    attributes: ['id', 'name'],
+                },
+            ],
+        })
+        return res.status(200).json({
+            message: 'Lead recieved successfully',
+            leads
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({
+            error: 'Oops!! Something went wrong please try again.',
+        });
+    }
+
+})
+
+
 // read lead route.
 router.get('/view/:id',
     verifyAccessToken,
