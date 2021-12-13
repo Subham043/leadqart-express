@@ -307,7 +307,7 @@ router.get('/view-via-lead/:leadId',
             console.log(groups);
             return res.status(200).json({
                 message: 'Follow Up count recieved successfully',
-                count:groups.length
+                count:groups
             });
         } catch (error) {
             console.log(error);
