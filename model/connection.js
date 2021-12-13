@@ -82,7 +82,7 @@ Group.belongsToMany(Lead, {
 
 //user-lead-followup relationships
 User.hasMany(followUp, { as: "followUps" });
-Lead.hasMany(followUp, { as: "followUps" });
+// Lead.hasMany(followUp, { as: "followUps" });
 followUp.belongsTo(User, {
     foreignKey: "userId",
 });

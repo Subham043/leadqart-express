@@ -282,6 +282,42 @@ router.get('/view-via-lead/:leadId',
 
     })
 
+    router.get('/get-overdue',
+    verifyAccessToken,
+    async function (req, res) {
+        try {
+            const NOW = new Date();
+            let groups = await followUp.findAll({
+                where: {
+                    userId: req.payload.id,
+                    timestamp: { 
+                        [Op.lt]: NOW
+                    },
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [
+                    {
+                      model: Leads,
+                      attributes: ['id', 'leadSource', 'facebookPage', 'campaign', 'adset', 'ad', 'formName', 'phone', 'job', 'newLead', 'name', 'email', 'extraInfo'],
+                    },
+                ],
+            })
+            console.log(groups);
+            return res.status(200).json({
+                message: 'Follow Up count recieved successfully',
+                count:groups.length
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+    })
+
 
     router.get('/get-upcoming-count',
     verifyAccessToken,
