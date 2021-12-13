@@ -215,25 +215,25 @@ router.get('/pages/subscribe/:page_id/:page_token', verifyAccessToken, async (re
             },
             responseType: 'json'
         })
-//         if(resp.body.success==true) {
-//             let fbPage = await FacebookPage.findAll({
-//                 attributes: ['id', 'userId'],
-//                 where: {
-//                     userId: req.payload.id,
-//                     fbPageId:page_id
-//                 }
-//             })
-//             if (facebook.length == 0) {
-//                 await Facebook.create({ userId: req.payload.id, token: page_token, fbPageId:page_id })
-//             } else {
-//                 await Facebook.update({ token: page_token }, {
-//                     where: {
-//                         userId: req.payload.id,
-//                         fbPageId:page_id
-//                     }
-//                 })
-//             }
-//         }
+        if(resp.body.response.success==true) {
+            let fbPage = await FacebookPage.findAll({
+                attributes: ['id', 'userId'],
+                where: {
+                    userId: req.payload.id,
+                    fbPageId:page_id
+                }
+            })
+            if (facebook.length == 0) {
+                await Facebook.create({ userId: req.payload.id, token: page_token, fbPageId:page_id })
+            } else {
+                await Facebook.update({ token: page_token }, {
+                    where: {
+                        userId: req.payload.id,
+                        fbPageId:page_id
+                    }
+                })
+            }
+        }
         return res.status(200).json({ response: resp.body });
     } catch (error) {
         console.log(error);
