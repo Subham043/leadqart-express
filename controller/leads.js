@@ -152,45 +152,38 @@ router.post('/edit-note/:id',
 
 // delete lead route.
 router.delete('/delete/:id',
-    //custom validations
-    check('id').custom(async (value) => IDValidation(value, 'id')),
-    check('id').custom(async (value, { req }) => {
-        let lead = await Leads.findAll({
-            attributes: ['id'],
-            where: {
-                id: value,
-                userId: req.payload.id,
-            }
-        })
-        if (lead.length == 0) {
-            return Promise.reject('Invalid lead');
-        }
-    }),
     verifyAccessToken,
     async function (req, res) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).json({
-                errors: errors.mapped(),
-            });
-        } else {
 
-            try {
-                await Leads.destroy({
-                    where: {
-                        id: req.params.id,
-                        userId: req.payload.id,
-                    }
-                })
+            let lead = await Leads.findAll({
+                attributes: ['id'],
+                where: {
+                    id: req.params.id,
+                    userId: req.payload.id,
+                }
+            })
+            if (lead.length == 0) {
                 return res.status(200).json({
-                    message: 'Lead deleted successfully',
+                    error: 'Invalid lead',
                 });
-            } catch (error) {
-                return res.status(200).json({
-                    error: 'Oops!! Something went wrong please try again.',
-                });
+            }else{
+                try {
+                    await Leads.destroy({
+                        where: {
+                            id: req.params.id,
+                            userId: req.payload.id,
+                        }
+                    })
+                    return res.status(200).json({
+                        message: 'Lead deleted successfully',
+                    });
+                } catch (error) {
+                    return res.status(200).json({
+                        error: 'Oops!! Something went wrong please try again.',
+                    });
+                }
             }
-        }
+
 
     })
 
