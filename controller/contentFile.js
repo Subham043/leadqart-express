@@ -47,7 +47,7 @@ router.post('/create/',
                 // Use the mv() method to place the file somewhere on your server
                 sampleFile.mv(uploadPath, async function (err) {
                     if (err){
-                        return res.status(500).json({ err });
+                        return res.status(200).json({ err });
                     }
                     await contentFile.create({ name, upload: newFileName, userId: req.payload.id })
                 });
@@ -55,7 +55,7 @@ router.post('/create/',
                     message: 'content file stored successfully',
                 });
             } catch (error) {
-                return res.status(400).json({
+                return res.status(200).json({
                     message: 'Oops!! Something went wrong please try again.',
                 });
             }
