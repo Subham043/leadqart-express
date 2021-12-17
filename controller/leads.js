@@ -161,6 +161,42 @@ router.post('/edit-note/:id',
 
     })
 
+    // edit lead note route.
+router.get('/status/:id/:status',
+verifyAccessToken,
+async function (req, res) {
+
+        let lead = await Leads.findAll({
+            attributes: ['id'],
+            where: {
+                id: req.params.id,
+                userId: req.payload.id,
+            }
+        })
+        if (lead.length == 0) {
+            return res.status(200).json({
+                error: 'Invalid lead',
+            });
+        }
+
+        try {
+            await Leads.update({ notes:req.params.status }, {
+                where: {
+                    id: req.params.id,
+                    userId: req.payload.id,
+                }
+            })
+            return res.status(200).json({
+                message: 'Status updated successfully',
+            });
+        } catch (error) {
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+})
+
 // delete lead route.
 router.delete('/delete/:id',
     verifyAccessToken,

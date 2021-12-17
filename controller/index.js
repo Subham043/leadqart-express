@@ -14,7 +14,7 @@ const { nameValidation, phoneValidation, emailValidation, passwordValidation, cp
 
 //test router
 router.get('/test', async (req, res) => {
-    return res.status(200).json({message:"connection successful"})
+    return res.status(200).json({ message: "connection successful" })
 })
 
 // registration page route.
@@ -41,7 +41,7 @@ router.post('/register',
     body('password').custom(async (value) => passwordValidation(value)),
     // password must be at least 5 chars long
     body('cpassword').custom((value, { req }) => cpasswordValidation(value, { req })),
-    
+
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -251,25 +251,71 @@ router.post('/reset-password/:userId',
 
 
 // login page route.
+// router.post('/login',
+//     AuthLimiter,
+//     //custom validation for email
+//     body('email').custom(async (value) => emailValidation(value)),
+
+//     body('email').custom(async (value) => {
+//         let user = await Users.findAll({
+//             attributes: ['email'],
+//             where: {
+//                 email: value,
+//                 verified: 1
+//             }
+//         })
+//         if (user.length < 1) {
+//             return Promise.reject('E-mail does not exist');
+//         }
+//     }),
+//     //custom validation for password
+//     body('password').custom(async (value) => passwordValidation(value)),
+//     async function (req, res) {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(200).json({
+//                 errors: errors.mapped(),
+//             });
+//         } else {
+//             let { email, password } = req.body;
+//             try {
+//                 let user = await Users.findOne({
+//                     attributes: ['id', 'email', 'password'],
+//                     where: {
+//                         email: email,
+//                         verified: 1,
+//                     }
+//                 });
+//                 if (bcrypt.compareSync(password, user.dataValues.password)) {
+//                     let accessToken = await signAccessToken(user.dataValues.id)
+//                     let refreshToken = await signRefreshToken(user.dataValues.id)
+//                     res.cookie('accessToken',accessToken, { maxAge: 300000, httpOnly: true });
+//                     res.cookie('refreshToken',refreshToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+//                     return res.status(200).json({
+//                         message: 'Logged In Successfully',
+//                         accessToken,
+//                         refreshToken
+//                     });
+//                 } else {
+//                     return res.status(200).json({
+//                         error: 'Invalid Password',
+//                     });
+//                 }
+//             } catch (error) {
+//                 console.log(error)
+//                 return res.status(200).json({
+//                     error: 'Oops!! Something went wrong please try again.',
+//                 });
+//             }
+//         }
+
+//     })
+
 router.post('/login',
     AuthLimiter,
     //custom validation for email
     body('email').custom(async (value) => emailValidation(value)),
 
-    body('email').custom(async (value) => {
-        let user = await Users.findAll({
-            attributes: ['email'],
-            where: {
-                email: value,
-                verified: 1
-            }
-        })
-        if (user.length < 1) {
-            return Promise.reject('E-mail does not exist');
-        }
-    }),
-    //custom validation for password
-    body('password').custom(async (value) => passwordValidation(value)),
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -277,20 +323,103 @@ router.post('/login',
                 errors: errors.mapped(),
             });
         } else {
-            let { email, password } = req.body;
+            let { email } = req.body;
             try {
-                let user = await Users.findOne({
+                let user = await Users.findAll({
                     attributes: ['id', 'email', 'password'],
                     where: {
                         email: email,
-                        verified: 1,
                     }
                 });
-                if (bcrypt.compareSync(password, user.dataValues.password)) {
-                    let accessToken = await signAccessToken(user.dataValues.id)
-                    let refreshToken = await signRefreshToken(user.dataValues.id)
-                    res.cookie('accessToken',accessToken, { maxAge: 300000, httpOnly: true });
-                    res.cookie('refreshToken',refreshToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+
+                if (user.length == 0) {
+                    let otp = (Math.floor(100000 + Math.random() * 900000));
+                    let userData = await Users.create({ email, otp })
+                    await asyncMail(email, 'Otp Verification', `<h3>Your otp is ${otp}</h3><br>`);
+                    return res.status(200).json({
+                        message: 'Kindly check your email for otp',
+                        id: encrypt(userData.dataValues.id)
+                    });
+
+                } else {
+                    let otp = (Math.floor(100000 + Math.random() * 900000));
+                    await Users.update({ otp }, {
+                        where: {
+                            email
+                        }
+                    })
+                    let userData = await Users.findOne({
+                        attributes: ['id'],
+                        where: {
+                            email: email,
+                        }
+                    });
+                    await asyncMail(email, 'Otp Verification', `<h3>Your otp is ${otp}</h3><br>`);
+                    return res.status(200).json({
+                        message: 'Kindly check your email for otp',
+                        id: encrypt(userData.dataValues.id)
+                    });
+                }
+
+            } catch (error) {
+                console.log(error)
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
+                });
+            }
+        }
+
+    })
+
+// login verification.
+router.post('/login-verify/:userId',
+    AuthLimiter,
+    //custom validation for phone
+    body('otp').custom(async (value) => otpValidation(value)),
+    async function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).json({
+                errors: errors.mapped(),
+            });
+        } else {
+            let id = ""
+            try {
+                id = await decrypt(req.params.userId);
+            } catch (error) {
+                return res.status(200).json({
+                    error: 'Invalid user id',
+                });
+            }
+            try {
+                let data = await Users.findAll({
+                    where: {
+                        id: id,
+                    }
+                })
+                if (data.length == 0) {
+                    return res.status(200).json({
+                        error: 'Invalid user id',
+                    });
+                }
+                let { otp } = req.body;
+                let updateData = await Users.findAll({
+                    where: {
+                        id: id,
+                        otp
+                    }
+                })
+                if (updateData.length > 0) {
+                    const otp = (Math.floor(100000 + Math.random() * 900000));
+                    await Users.update({ otp }, {
+                        where: {
+                            id: id
+                        }
+                    })
+                    let accessToken = await signAccessToken(id)
+                    let refreshToken = await signRefreshToken(id)
+                    res.cookie('accessToken', accessToken, { maxAge: 300000, httpOnly: true });
+                    res.cookie('refreshToken', refreshToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
                     return res.status(200).json({
                         message: 'Logged In Successfully',
                         accessToken,
@@ -298,11 +427,11 @@ router.post('/login',
                     });
                 } else {
                     return res.status(200).json({
-                        error: 'Invalid Password',
+                        error: 'Invalid OTP',
                     });
                 }
-            } catch (error) {
-                console.log(error)
+            } catch (e) {
+                console.log(e);
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',
                 });
@@ -315,7 +444,7 @@ router.post('/login',
 router.get('/refresh-token',
     async function (req, res) {
         try {
-            if(!req.headers['refreshtoken']){
+            if (!req.headers['refreshtoken']) {
                 return res.status(200).json({
                     error: 'Unauthorised',
                 });
@@ -324,8 +453,8 @@ router.get('/refresh-token',
             let id = await verifyRefreshToken(rToken)
             let accessToken = await signAccessToken(id)
             let refreshToken = await signRefreshToken(id)
-            res.cookie('accessToken',accessToken, { maxAge: 300000, httpOnly: true });
-            res.cookie('refreshToken',refreshToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+            res.cookie('accessToken', accessToken, { maxAge: 300000, httpOnly: true });
+            res.cookie('refreshToken', refreshToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             return res.status(200).json({
                 message: 'Logged In Successfully',
                 accessToken,

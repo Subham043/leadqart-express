@@ -35,6 +35,8 @@ db.sequelize.sync({ force: false })
 
 //usermodel
 const User = require('./users')(sequelize, DataTypes);
+//teammodel
+const Team = require('./teams')(sequelize, DataTypes);
 //facebookmodel
 const Facebook = require('./facebook')(sequelize, DataTypes);
 const FacebookPage = require('./facebookPage')(sequelize, DataTypes);
@@ -57,6 +59,11 @@ const Activity = require('./activity')(sequelize, DataTypes);
 //webhook
 const Webhook = require('./webhook')(sequelize, DataTypes);
 
+//user-lead relationships
+User.hasMany(Team, { as: "teams" });
+Team.belongsTo(User, {
+    foreignKey: "memberId",
+});
 //user-lead relationships
 User.hasMany(Lead, { as: "leads" });
 Lead.belongsTo(User, {
@@ -120,6 +127,7 @@ contentPage.belongsTo(User, {
 });
 
 db.users = User;
+db.team = Team;
 db.facebook = Facebook;
 db.facebookPage = FacebookPage;
 db.leads = Lead;

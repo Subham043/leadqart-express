@@ -1,26 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
-    const Activity = sequelize.define(
-      "activity",
+    const Teams = sequelize.define(
+      "teams",
       {
-        type: {
-          type:  DataTypes.TEXT,
-          allowNull: true,
-        },
-        description: {
-          type:  DataTypes.TEXT,
-          allowNull: true,
-        },
-        timestamp: {
-          type:  DataTypes.STRING,
-          allowNull: true,
-        },
-        userId: {
+        teamId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
         },
-        leadId: {
+        memberId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
         },
         created_at: {
           type: "TIMESTAMP",
@@ -37,5 +25,5 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
       }
     );
-    return Activity;
+    return Teams;
   };

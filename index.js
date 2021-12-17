@@ -47,6 +47,8 @@ let authController = require('./controller');
 app.use('/', authController);
 let facebookController = require('./controller/facebook');
 app.use('/facebook', facebookController);
+let teamController = require('./controller/teams');
+app.use('/teams', teamController);
 let leadController = require('./controller/leads');
 app.use('/leads', leadController);
 let groupController = require('./controller/groups');

@@ -8,7 +8,7 @@ const Users = db.users;
 const Groups = db.groups;
 const Leads = db.leads;
 const Activity = db.Activity;
-const { textValidation, IDValidation, emptyTextValidation } = require('../helper/validation');
+const { textValidation, IDValidation, emptyTextValidation, emptyValidation } = require('../helper/validation');
 
 
 
@@ -16,6 +16,7 @@ const { textValidation, IDValidation, emptyTextValidation } = require('../helper
 router.post('/create/:leadId',
     //custom validations
     body('type').custom(async (value) => textValidation(value, 'type')),
+    body('description').custom(async (value) => emptyValidation(value, 'description')),
     body('timestamp').custom(async (value) => emptyTextValidation(value, 'timestamp')),
     verifyAccessToken,
     async function (req, res) {
@@ -25,7 +26,7 @@ router.post('/create/:leadId',
                 errors: errors.mapped(),
             });
         } else {
-            let { type, timestamp } = req.body;
+            let { type, description, timestamp } = req.body;
 
             let lead = await Leads.findAll({
                 attributes: ['id'],
@@ -41,7 +42,7 @@ router.post('/create/:leadId',
             }
 
             try {
-                await Activity.create({ type, timestamp, userId: req.payload.id, leadId:req.params.leadId })
+                await Activity.create({ type, description, timestamp, userId: req.payload.id, leadId:req.params.leadId })
                 return res.status(200).json({
                     message: 'Activity stored successfully',
                 });
@@ -60,6 +61,7 @@ router.post('/edit/:id',
     verifyAccessToken,
     //custom validations
     body('type').custom(async (value) => textValidation(value, 'type')),
+    body('description').custom(async (value) => emptyValidation(value, 'description')),
     body('timestamp').custom(async (value) => emptyTextValidation(value, 'timestamp')),
     
     async function (req, res) {
@@ -69,7 +71,7 @@ router.post('/edit/:id',
                 errors: errors.mapped(),
             });
         } else {
-            let { type, timestamp } = req.body;
+            let { type, description, timestamp } = req.body;
 
             let lead = await Activity.findAll({
                 attributes: ['id'],
@@ -85,7 +87,7 @@ router.post('/edit/:id',
             }
 
             try {
-                await Activity.update({ type, timestamp }, {
+                await Activity.update({ type, description, timestamp }, {
                     where: {
                         id: req.params.id,
                         userId: req.payload.id,
@@ -176,7 +178,7 @@ router.get('/view-all/:leadId',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'type', 'timestamp', 'created_at'],
+                attributes: ['id', 'type', 'description', 'timestamp', 'created_at'],
             })
             return res.status(200).json({
                 message: 'Activity recieved successfully',
@@ -223,7 +225,7 @@ router.get('/view/:id',
                 order: [
                     ['id', 'DESC'],
                 ],
-                attributes: ['id', 'type', 'timestamp', 'created_at'],
+                attributes: ['id', 'description', 'type', 'timestamp', 'created_at'],
             })
             return res.status(200).json({
                 message: 'Activity recieved successfully',
