@@ -362,7 +362,7 @@ router.post('/create-via-excel/',
                     }
                 });
 
-                if (req.files.upload.mimetype == 'text/csv') {
+                if (req.files.upload.mimetype == 'text/csv' || req.files.upload.mimetype == 'text/comma-separated-values') {
                     let csvData = [];
                     fs.createReadStream(uploadPath)
                         .pipe(csv())
