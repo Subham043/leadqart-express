@@ -332,7 +332,7 @@ router.post('/create-via-excel/',
         if (!req.files || Object.keys(req.files).length === 0) {
             return Promise.reject('Please select a file');
         }
-        if (req.files.upload.mimetype == 'text/csv' || req.files.upload.mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || req.files.upload.mimetype == 'application/vnd.ms-excel') {
+        if (req.files.upload.mimetype == 'text/csv' || req.files.upload.mimetype == 'text/comma-separated-values' || req.files.upload.mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || req.files.upload.mimetype == 'application/vnd.ms-excel') {
             return true;
         }
         return Promise.reject('Invalid file type');
