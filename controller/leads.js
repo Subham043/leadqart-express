@@ -421,6 +421,7 @@ router.post('/create-via-excel/',
 
 
             } catch (error) {
+                console.log(error);
                 return res.status(200).json({
                     message: 'Oops!! Something went wrong please try again.',
                 });
