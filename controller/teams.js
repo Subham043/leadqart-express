@@ -42,7 +42,7 @@ const { verifyAccessToken } = require('../helper/jwt');
 
                 } else {
                     let otp = (Math.floor(100000 + Math.random() * 900000));
-                    let userData = await Users.create({ email, otp })
+                    let userData = await Users.create({ email, otp, userType:1 })
                     await Team.create({ teamId:req.payload.id, memberId:userData.dataValues.id })
                     let leader = await Users.findOne({
                         attributes: ['id', 'email'],

@@ -7,6 +7,8 @@ const db = require('../model/connection');
 const Users = db.users;
 const contentMessage = db.contentMessage;
 const { textValidation, IDValidation } = require('../helper/validation');
+const uuid4 = require('uuid4');
+const fs = require('fs');
 
 
 // create follow-up route.
@@ -15,6 +17,16 @@ router.post('/create/',
     //custom validations
     body('title').custom(async (value) => textValidation(value, 'title')),
     body('message').custom(async (value) => textValidation(value, 'message')),
+    body('image').custom(async (value, { req }) => {
+        if (req.files) {
+            if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
+                return true
+            }
+            return Promise.reject('Invalid image type');
+        }
+        return true;
+
+    }),
 
     async function (req, res) {
         const errors = validationResult(req);
@@ -23,10 +35,26 @@ router.post('/create/',
                 errors: errors.mapped(),
             });
         } else {
-            let { title, message } = req.body;
+            if (!req.files || Object.keys(req.files).length === 0) {
+                return res.status(200).json({ error: 'No files were uploaded.' });
+            }
+
 
             try {
-                await contentMessage.create({ title, message, userId: req.payload.id })
+                let sampleFile = req.files.image;
+                let newFileName = `${uuid4()}-${sampleFile.name}`;
+                let uploadPath = 'public/uploads/' + newFileName;
+
+
+                let { title, message } = req.body;
+                // Use the mv() method to place the file somewhere on your server
+                sampleFile.mv(uploadPath, async function (err) {
+                    if (err) {
+                        return res.status(200).json({ errors: err });
+                    }
+                    await contentMessage.create({ title, message, image: newFileName, userId: req.payload.id })
+                });
+
                 return res.status(200).json({
                     message: 'content message stored successfully',
                 });
@@ -56,7 +84,7 @@ router.delete('/delete/:id',
             return Promise.reject('Invalid content message');
         }
     }),
-    
+
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -66,15 +94,30 @@ router.delete('/delete/:id',
         } else {
 
             try {
-                await contentMessage.destroy({
+                let cFile = await contentMessage.findOne({
+                    attributes: ['id','image'],
                     where: {
                         id: req.params.id,
                         userId: req.payload.id,
                     }
                 })
-                return res.status(200).json({
-                    message: 'content message removed successfully',
-                });
+                fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
+                    if (err){
+                        return res.status(200).json({
+                            error: 'Oops!! Something went wrong please try again.',
+                        });
+                    }
+                    await contentMessage.destroy({
+                        where: {
+                            id: req.params.id,
+                            userId: req.payload.id,
+                        }
+                    })
+                    return res.status(200).json({
+                        message: 'content message removed successfully',
+                    });
+                  });
+                
             } catch (error) {
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',
@@ -86,8 +129,8 @@ router.delete('/delete/:id',
 
 // edit follow up.
 router.post('/edit/:id',
-verifyAccessToken,
-//custom validations
+    verifyAccessToken,
+    //custom validations
     check('id').custom(async (value) => IDValidation(value, 'follow up id')),
     check('id').custom(async (value, { req }) => {
         let lead = await contentMessage.findAll({
@@ -103,34 +146,79 @@ verifyAccessToken,
     }),
     body('title').custom(async (value) => textValidation(value, 'title')),
     body('message').custom(async (value) => textValidation(value, 'message')),
-async function (req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(200).json({
-            errors: errors.mapped(),
-        });
-    } else {
-        let { title, message } = req.body;
-        try {
-            let updateData = await contentMessage.update({ title, message }, {
-                where: {
-                    id: req.params.id,
-                    userId: req.payload.id,
-                }
-            })
-            return res.status(200).json({
-                message: 'content message updated successfully',
-            });
-        } catch (error) {
-            return res.status(200).json({
-                error: 'Oops!! Something went wrong please try again.',
-            });
+    body('image').custom(async (value, { req }) => {
+        if (req.files) {
+            if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
+                return true
+            }
+            return Promise.reject('Invalid image type');
         }
-        
-        
-    }
+        return true;
 
-})
+    }),
+    async function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).json({
+                errors: errors.mapped(),
+            });
+        } else {
+            try {
+                if (req.files) {
+                    let cFile = await contentMessage.findOne({
+                        attributes: ['id','image'],
+                        where: {
+                            id: req.params.id,
+                            userId: req.payload.id,
+                        }
+                    })
+                    fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
+                        if (err){
+                            return res.status(200).json({
+                                message: 'Oops!! Something went wrong please try again.',
+                            });
+                        }
+                        let sampleFile = req.files.image;
+                        let newFileName = `${uuid4()}-${sampleFile.name}`;
+                        let uploadPath = 'public/uploads/' + newFileName;
+                        let { title, message } = req.body;
+                        sampleFile.mv(uploadPath, async function (err) {
+                            if (err){
+                                return res.status(200).json({ errors:err });
+                            }
+                            await contentMessage.update({ title, message, image: newFileName }, {
+                                where: {
+                                    id: req.params.id,
+                                    userId: req.payload.id,
+                                }
+                            })
+                        });
+                        return res.status(200).json({
+                            message: 'content message updated successfully',
+                        });
+                    })
+                } else {
+                    let { title, message } = req.body;
+                    await contentMessage.update({ title, message }, {
+                        where: {
+                            id: req.params.id,
+                            userId: req.payload.id,
+                        }
+                    })
+                    return res.status(200).json({
+                        message: 'content message updated successfully',
+                    });
+                }
+            } catch (error) {
+                return res.status(200).json({
+                    error: 'Oops!! Something went wrong please try again.',
+                });
+            }
+
+
+        }
+
+    })
 
 
 // read all lead route.
@@ -148,7 +236,7 @@ router.get('/view-all',
             })
             return res.status(200).json({
                 message: 'Content message recieved successfully',
-                contentMessage:leads
+                contentMessage: leads
             });
         } catch (error) {
             return res.status(200).json({
@@ -195,7 +283,7 @@ router.get('/view/:id',
             })
             return res.status(200).json({
                 message: 'Content message recieved successfully',
-                contentMessage:leads
+                contentMessage: leads
             });
         } catch (error) {
             console.log(error);

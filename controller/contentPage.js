@@ -15,7 +15,7 @@ router.post('/create/',
     verifyAccessToken,
     //custom validations
     body('title').custom(async (value) => emptyTextValidation(value, 'title')),
-    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
+    // body('description').custom(async (value) => emptyTextValidation(value, 'description')),
     body('youtubeVideo').custom(async (value) => emptyTextValidation(value, 'youtubeVideo')),
     body('map').custom(async (value) => emptyTextValidation(value, 'map')),
     body('image').custom(async (value, { req }) => {
@@ -144,7 +144,7 @@ router.post('/edit/:id',
         }
     }),
     body('title').custom(async (value) => emptyTextValidation(value, 'title')),
-    body('description').custom(async (value) => emptyTextValidation(value, 'description')),
+    // body('description').custom(async (value) => emptyTextValidation(value, 'description')),
     body('youtubeVideo').custom(async (value) => emptyTextValidation(value, 'youtubeVideo')),
     body('map').custom(async (value) => emptyTextValidation(value, 'map')),
     body('image').custom(async (value, { req }) => {
