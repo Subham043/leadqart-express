@@ -180,7 +180,7 @@ async function (req, res) {
         }
 
         try {
-            await Leads.update({ notes:req.params.status }, {
+            await Leads.update({ newLead:req.params.status }, {
                 where: {
                     id: req.params.id,
                     userId: req.payload.id,
