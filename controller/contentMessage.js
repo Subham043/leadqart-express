@@ -16,7 +16,7 @@ router.post('/create/',
     verifyAccessToken,
     //custom validations
     body('title').custom(async (value) => textValidation(value, 'title')),
-    body('message').custom(async (value) => textValidation(value, 'message')),
+    // body('message').custom(async (value) => textValidation(value, 'message')),
     body('image').custom(async (value, { req }) => {
         if (req.files) {
             if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
@@ -145,7 +145,7 @@ router.post('/edit/:id',
         }
     }),
     body('title').custom(async (value) => textValidation(value, 'title')),
-    body('message').custom(async (value) => textValidation(value, 'message')),
+    // body('message').custom(async (value) => textValidation(value, 'message')),
     body('image').custom(async (value, { req }) => {
         if (req.files) {
             if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
