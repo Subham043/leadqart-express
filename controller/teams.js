@@ -67,5 +67,37 @@ const { verifyAccessToken } = require('../helper/jwt');
 
     })
 
+    // read all lead route.
+router.get('/view-all',
+verifyAccessToken,
+async function (req, res) {
+    try {
+        let leads = await Team.findAll({
+            where: {
+                teamId: req.payload.id
+            },
+            order: [
+                ['id', 'DESC'],
+            ],
+            include: [
+                {
+                    model: Users,
+                    attributes: ['id', 'email']
+                },
+            ],
+        })
+        return res.status(200).json({
+            message: 'Team recieved successfully',
+            teams:leads
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({
+            error: 'Oops!! Something went wrong please try again.',
+        });
+    }
+
+})
+
 
 module.exports = router;
