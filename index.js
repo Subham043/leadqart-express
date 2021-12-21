@@ -45,6 +45,8 @@ app.set('view engine', 'ejs');
 //controller-routes
 let authController = require('./controller');
 app.use('/', authController);
+let googleController = require('./controller/google');
+app.use('/google', googleController);
 let facebookController = require('./controller/facebook');
 app.use('/facebook', facebookController);
 let teamController = require('./controller/teams');

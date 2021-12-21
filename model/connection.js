@@ -37,6 +37,8 @@ db.sequelize.sync({ force: false })
 const User = require('./users')(sequelize, DataTypes);
 //teammodel
 const Team = require('./teams')(sequelize, DataTypes);
+//googlemodel
+const Google = require('./google')(sequelize, DataTypes);
 //facebookmodel
 const Facebook = require('./facebook')(sequelize, DataTypes);
 const FacebookPage = require('./facebookPage')(sequelize, DataTypes);
@@ -128,6 +130,7 @@ contentPage.belongsTo(User, {
 
 db.users = User;
 db.team = Team;
+db.google = Google;
 db.facebook = Facebook;
 db.facebookPage = FacebookPage;
 db.leads = Lead;
