@@ -225,6 +225,7 @@ router.delete('/delete/:id',
                     message: 'Lead deleted successfully',
                 });
             } catch (error) {
+                console.log(error);
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',
                 });
@@ -406,7 +407,22 @@ router.post('/create-via-excel/',
                         .on('end', () => {
 
                             csvData.forEach(async (lead) => {
-                                await Leads.create({ ...lead, userId: req.payload.id })
+                                let checkLead = await Leads.findAll({
+                                    where: {
+                                        userId: req.payload.id,
+                                        phone:lead.phone,
+                                        email:lead.email,
+                                    },
+                                    order: [
+                                        ['id', 'DESC'],
+                                    ],
+                                    attributes: ['id',],
+                                })
+                                if(checkLead.length > 0) {
+                                    return;
+                                }else{
+                                    await Leads.create({ ...lead, userId: req.payload.id })
+                                }
                             })
                             // console.log(csvData)
                             return res.status(200).json({
@@ -439,7 +455,22 @@ router.post('/create-via-excel/',
                         });
 
                         data.forEach(async (lead) => {
-                            await Leads.create({ ...lead, userId: req.payload.id })
+                             let checkLead = await Leads.findAll({
+                                    where: {
+                                        userId: req.payload.id,
+                                        phone:lead.phone,
+                                        email:lead.email,
+                                    },
+                                    order: [
+                                        ['id', 'DESC'],
+                                    ],
+                                    attributes: ['id',],
+                                })
+                                if(checkLead.length > 0) {
+                                    return;
+                                }else{
+                                    await Leads.create({ ...lead, userId: req.payload.id })
+                                }
                         })
                         // console.log(data)
                         return res.status(200).json({
