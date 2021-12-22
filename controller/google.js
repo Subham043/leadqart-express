@@ -51,6 +51,43 @@ router.post('/connection/app',
     })
 
 
+    router.get('/token/detail',
+    verifyAccessToken,
+    async (req, res) => {
+        try {
+            let google = await Google.findAll({
+                where: {
+                    userId: req.payload.id,
+                }
+            })
+            if (google.length == 0) {
+                return res.status(200).json({
+                    message: 'No google token details available',
+                    googleDetails:{}
+                });
+            } else {
+                let googleDetails = await Google.findOne({
+                    where: {
+                        userId: req.payload.id,
+                    }
+                })
+                return res.status(200).json({
+                    message: 'Google token details recieved successfully',
+                    googleDetails:googleDetails
+                });
+            }
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+
+    })
+
+
 
 
 

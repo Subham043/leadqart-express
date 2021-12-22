@@ -56,6 +56,8 @@ const Lead = require('./leads')(sequelize, DataTypes);
 const Group = require('./groups')(sequelize, DataTypes);
 //lead-groupmodel
 const LeadGroup = require('./leadsGroups')(sequelize, DataTypes);
+//lead-groupmodel
+const assignedLeads = require('./assignedLeads')(sequelize, DataTypes);
 //contentmessagemodel
 const Activity = require('./activity')(sequelize, DataTypes);
 //webhook
@@ -87,6 +89,18 @@ Group.belongsToMany(Lead, {
     through: "leads_groups",
     as: "leads",
     foreignKey: "group_id",
+});
+
+//lead-group relationships
+Lead.belongsToMany(User, {
+    through: "assigned_leads",
+    as: "member",
+    foreignKey: "lead_id",
+});
+User.belongsToMany(Lead, {
+    through: "assigned_leads",
+    as: "memberLeads",
+    foreignKey: "member_id",
 });
 
 //user-lead-followup relationships
@@ -136,6 +150,7 @@ db.facebookPage = FacebookPage;
 db.leads = Lead;
 db.groups = Group;
 db.leadsGroups = LeadGroup;
+db.assignedLeads = assignedLeads;
 db.followUp = followUp;
 db.contentMessage = contentMessage;
 db.contentFile = contentFile;

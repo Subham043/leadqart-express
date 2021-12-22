@@ -55,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           defaultValue:1
         },
+        assigned: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue:0
+        },
         userId: {
           type: DataTypes.INTEGER,
           allowNull: false,
