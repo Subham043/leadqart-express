@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
           unique: true,
         },
         phone: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           allowNull: true,
         },
         password: {

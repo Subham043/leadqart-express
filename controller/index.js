@@ -10,6 +10,7 @@ const { encrypt, decrypt } = require('../helper/crypt');
 const { syncMail, asyncMail } = require('../helper/mail');
 const { AuthLimiter } = require('../middleware/rate-limiter');
 const { nameValidation, phoneValidation, emailValidation, passwordValidation, cpasswordValidation, otpValidation } = require('../helper/validation');
+const { verifyAccessToken } = require('../helper/jwt');
 
 
 //test router
@@ -439,6 +440,66 @@ router.post('/login-verify/:userId',
         }
 
     })
+
+    router.get('/profile',
+    verifyAccessToken,
+    async function (req, res) {
+        try {
+            let user = await Users.findOne({
+                where: {
+                    id: req.payload.id,
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                attributes: ['name', 'email', 'phone', 'created_at'],
+            })
+            return res.status(200).json({
+                message: 'Profile recieved successfully',
+                user
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+
+    })
+
+    // edit lead note route.
+router.post('/profile',
+//custom validation for name
+body('name').custom(async (value) => nameValidation(value)),
+//custom validation for phone
+body('phone').custom(async (value) => phoneValidation(value)),
+verifyAccessToken,
+async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(200).json({
+            errors: errors.mapped(),
+        });
+    } else {
+        let { name,phone } = req.body;
+
+        try {
+            await Users.update({ name,phone }, {
+                where: {
+                    id: req.payload.id,
+                }
+            })
+            return res.status(200).json({
+                message: 'Profile updated successfully',
+            });
+        } catch (error) {
+            return res.status(200).json({
+                error: 'Oops!! Something went wrong please try again.',
+            });
+        }
+    }
+
+})
 
 // refresh token route.
 router.get('/refresh-token',
