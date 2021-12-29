@@ -62,8 +62,14 @@ const assignedLeads = require('./assignedLeads')(sequelize, DataTypes);
 const Activity = require('./activity')(sequelize, DataTypes);
 //webhook
 const Webhook = require('./webhook')(sequelize, DataTypes);
+//pushnotification
+const PushNotifictaion = require('./pushNotification')(sequelize, DataTypes);
 
 //user-lead relationships
+User.hasMany(PushNotifictaion, { as: "pushnotification" });
+PushNotifictaion.belongsTo(User, {
+    foreignKey: "userId",
+});
 User.hasMany(Team, { as: "teams" });
 Team.belongsTo(User, {
     foreignKey: "memberId",
@@ -157,5 +163,6 @@ db.contentFile = contentFile;
 db.contentPage = contentPage;
 db.Activity = Activity;
 db.Webhook = Webhook;
+db.PushNotifictaion = PushNotifictaion;
 
 module.exports = db;

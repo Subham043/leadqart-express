@@ -17,16 +17,16 @@ router.post('/create/',
     //custom validations
     body('title').custom(async (value) => textValidation(value, 'title')),
     // body('message').custom(async (value) => textValidation(value, 'message')),
-    body('image').custom(async (value, { req }) => {
-        if (req.files) {
-            if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
-                return true
-            }
-            return Promise.reject('Invalid image type');
-        }
-        return true;
+    // body('image').custom(async (value, { req }) => {
+    //     if (req.files) {
+    //         if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
+    //             return true
+    //         }
+    //         return Promise.reject('Invalid image type');
+    //     }
+    //     return true;
 
-    }),
+    // }),
 
     async function (req, res) {
         const errors = validationResult(req);
@@ -35,25 +35,25 @@ router.post('/create/',
                 errors: errors.mapped(),
             });
         } else {
-            if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(200).json({ error: 'No files were uploaded.' });
-            }
+            // if (!req.files || Object.keys(req.files).length === 0) {
+            //     return res.status(200).json({ error: 'No files were uploaded.' });
+            // }
 
 
             try {
-                let sampleFile = req.files.image;
-                let newFileName = `${uuid4()}-${sampleFile.name}`;
-                let uploadPath = 'public/uploads/' + newFileName;
+                // let sampleFile = req.files.image;
+                // let newFileName = `${uuid4()}-${sampleFile.name}`;
+                // let uploadPath = 'public/uploads/' + newFileName;
 
 
                 let { title, message } = req.body;
                 // Use the mv() method to place the file somewhere on your server
-                sampleFile.mv(uploadPath, async function (err) {
-                    if (err) {
-                        return res.status(200).json({ errors: err });
-                    }
+                // sampleFile.mv(uploadPath, async function (err) {
+                //     if (err) {
+                //         return res.status(200).json({ errors: err });
+                //     }
                     await contentMessage.create({ title, message, image: newFileName, userId: req.payload.id })
-                });
+                // });
 
                 return res.status(200).json({
                     message: 'content message stored successfully',
@@ -101,12 +101,12 @@ router.delete('/delete/:id',
                         userId: req.payload.id,
                     }
                 })
-                fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
-                    if (err){
-                        return res.status(200).json({
-                            error: 'Oops!! Something went wrong please try again.',
-                        });
-                    }
+                // fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
+                //     if (err){
+                //         return res.status(200).json({
+                //             error: 'Oops!! Something went wrong please try again.',
+                //         });
+                //     }
                     await contentMessage.destroy({
                         where: {
                             id: req.params.id,
@@ -116,7 +116,7 @@ router.delete('/delete/:id',
                     return res.status(200).json({
                         message: 'content message removed successfully',
                     });
-                  });
+                //   });
                 
             } catch (error) {
                 return res.status(200).json({
@@ -146,16 +146,16 @@ router.post('/edit/:id',
     }),
     body('title').custom(async (value) => textValidation(value, 'title')),
     // body('message').custom(async (value) => textValidation(value, 'message')),
-    body('image').custom(async (value, { req }) => {
-        if (req.files) {
-            if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
-                return true
-            }
-            return Promise.reject('Invalid image type');
-        }
-        return true;
+    // body('image').custom(async (value, { req }) => {
+    //     if (req.files) {
+    //         if (req.files.image.mimetype == 'image/png' || req.files.image.mimetype == 'image/jpg' || req.files.image.mimetype == 'image/jpeg') {
+    //             return true
+    //         }
+    //         return Promise.reject('Invalid image type');
+    //     }
+    //     return true;
 
-    }),
+    // }),
     async function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -164,40 +164,40 @@ router.post('/edit/:id',
             });
         } else {
             try {
-                if (req.files) {
-                    let cFile = await contentMessage.findOne({
-                        attributes: ['id','image'],
-                        where: {
-                            id: req.params.id,
-                            userId: req.payload.id,
-                        }
-                    })
-                    fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
-                        if (err){
-                            return res.status(200).json({
-                                message: 'Oops!! Something went wrong please try again.',
-                            });
-                        }
-                        let sampleFile = req.files.image;
-                        let newFileName = `${uuid4()}-${sampleFile.name}`;
-                        let uploadPath = 'public/uploads/' + newFileName;
-                        let { title, message } = req.body;
-                        sampleFile.mv(uploadPath, async function (err) {
-                            if (err){
-                                return res.status(200).json({ errors:err });
-                            }
-                            await contentMessage.update({ title, message, image: newFileName }, {
-                                where: {
-                                    id: req.params.id,
-                                    userId: req.payload.id,
-                                }
-                            })
-                        });
-                        return res.status(200).json({
-                            message: 'content message updated successfully',
-                        });
-                    })
-                } else {
+                // if (req.files) {
+                //     let cFile = await contentMessage.findOne({
+                //         attributes: ['id','image'],
+                //         where: {
+                //             id: req.params.id,
+                //             userId: req.payload.id,
+                //         }
+                //     })
+                //     fs.unlink(`public/uploads/${cFile.dataValues.image}`, async (err) => {
+                //         if (err){
+                //             return res.status(200).json({
+                //                 message: 'Oops!! Something went wrong please try again.',
+                //             });
+                //         }
+                //         let sampleFile = req.files.image;
+                //         let newFileName = `${uuid4()}-${sampleFile.name}`;
+                //         let uploadPath = 'public/uploads/' + newFileName;
+                //         let { title, message } = req.body;
+                //         sampleFile.mv(uploadPath, async function (err) {
+                //             if (err){
+                //                 return res.status(200).json({ errors:err });
+                //             }
+                //             await contentMessage.update({ title, message, image: newFileName }, {
+                //                 where: {
+                //                     id: req.params.id,
+                //                     userId: req.payload.id,
+                //                 }
+                //             })
+                //         });
+                //         return res.status(200).json({
+                //             message: 'content message updated successfully',
+                //         });
+                //     })
+                // } else {
                     let { title, message } = req.body;
                     await contentMessage.update({ title, message }, {
                         where: {
@@ -208,7 +208,7 @@ router.post('/edit/:id',
                     return res.status(200).json({
                         message: 'content message updated successfully',
                     });
-                }
+                // }
             } catch (error) {
                 return res.status(200).json({
                     error: 'Oops!! Something went wrong please try again.',

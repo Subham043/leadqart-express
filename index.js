@@ -67,6 +67,11 @@ let contentPage = require('./controller/contentPage');
 app.use('/content-page', contentPage);
 let Activity = require('./controller/activity');
 app.use('/activity', Activity);
+let PushNotifictaion = require('./controller/pushNotification');
+app.use('/pushNotification', PushNotifictaion);
+
+// let csvController = require('./controller/armsCsv');
+// app.use('/csv', csvController);
 
 
 app.listen(port,()=>{
