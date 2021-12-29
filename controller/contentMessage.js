@@ -52,7 +52,7 @@ router.post('/create/',
                 //     if (err) {
                 //         return res.status(200).json({ errors: err });
                 //     }
-                    await contentMessage.create({ title, message, image: newFileName, userId: req.payload.id })
+                    await contentMessage.create({ title, message, userId: req.payload.id })
                 // });
 
                 return res.status(200).json({
