@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: true,
         },
         timestamp: {
-          type: "TIMESTAMP",
+          type: DataTypes.TEXT,
           allowNull: true,
         },
         userId: {
